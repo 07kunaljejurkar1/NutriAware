@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NutriAware | Healthy Food, Healthy Life</title>
+<style>
+:root{--green:#16845b;--light:#eaf8ef;--dark:#173c2d}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5faf6;color:#24352b}
+header{background:var(--green);color:white;padding:22px;text-align:center}
+header h1{margin:0}
+header p{margin:8px 0 0}
+nav{display:flex;gap:8px;padding:12px;overflow-x:auto;background:white;position:sticky;top:0;z-index:5}
+nav button,.btn{border:0;border-radius:8px;padding:10px 14px;background:var(--green);color:white;cursor:pointer}
+nav button{white-space:nowrap}
+nav button:hover,.btn:hover{background:#0d6543}
+main{max-width:1100px;margin:auto;padding:18px}
+section{display:none;background:white;margin:15px 0;padding:20px;border-radius:14px;box-shadow:0 2px 10px #0000000b}
+section.active{display:block}
+h2{color:var(--green);margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.card{background:var(--light);padding:15px;border-radius:12px}
+input,select{padding:11px;border:1px solid #cbd9ce;border-radius:8px;width:100%;margin:7px 0 12px}
+label{font-weight:bold}
+.result{margin-top:14px;padding:14px;background:#eaf8ef;border-radius:10px;white-space:pre-wrap}
+.food{display:flex;gap:10px;align-items:center;margin:8px 0}
+.food input{width:auto;margin:0}
+footer{text-align:center;padding:25px;color:#66756b}
+.small{font-size:13px;color:#617268}
+#app{display:none}
+</style>
+</head>
+<body>
+<header>
+<h1>🥗 NutriAware</h1>
+<p>Nutrition and Healthy Food Awareness System</p>
+<p>Eat Smart • Stay Healthy • Live Better</p>
+</header>
+
+<div id="login" style="max-width:430px;margin:35px auto;padding:22px;background:white;border-radius:14px">
+<h2>Welcome to NutriAware</h2>
+<p>Enter your name to start the demo.</p>
+<label>Your name</label>
+<input id="username" placeholder="Enter your name">
+<button class="btn" onclick="login()">Start Demo</button>
+<p class="small">Demo login only. Do not enter a password or sensitive information.</p>
+</div>
+
+<div id="app">
+<nav>
+<button onclick="show('home')">🏠 Dashboard</button>
+<button onclick="show('thali')">🍱 Build My Thali</button>
+<button onclick="show('swaps')">🔄 Food Swaps</button>
+<button onclick="show('assistant')">🤖 Recipe Assistant</button>
+<button onclick="show('scanner')">📸 Nutrition Scanner</button>
+<button onclick="show('quiz')">📝 Quiz</button>
+<button onclick="show('water')">💧 Water Tracker</button>
+<button onclick="show('analytics')">📈 Analytics</button>
+<button onclick="show('recipes')">🥗 Recipes</button>
+</nav>
+
+<main>
+<section id="home" class="active">
+<h2>Welcome, <span id="welcome"></span>! 👋</h2>
+<p>Make healthier food choices every day with NutriAware.</p>
+<div class="grid">
+<div class="card"><h3>🍱 Build My Thali</h3><p>Create a balanced meal.</p><button class="btn" onclick="show('thali')">Open</button></div>
+<div class="card"><h3>🔄 Healthy Food Swaps</h3><p>Discover healthier alternatives.</p><button class="btn" onclick="show('swaps')">Open</button></div>
+<div class="card"><h3>🤖 Recipe Assistant</h3><p>Find meal ideas from available foods.</p><button class="btn" onclick="show('assistant')">Open</button></div>
+<div class="card"><h3>📸 Nutrition Scanner</h3><p>Look up demo nutrition estimates.</p><button class="btn" onclick="show('scanner')">Open</button></div>
+<div class="card"><h3>📝 Nutrition Quiz</h3><p>Test your nutrition knowledge.</p><button class="btn" onclick="show('quiz')">Open</button></div>
+<div class="card"><h3>💧 Water Tracker</h3><p>Track your daily water intake.</p><button class="btn" onclick="show('water')">Open</button></div>
+<div class="card"><h3>📈 Nutrition Analytics</h3><p>Review your demo activity.</p><button class="btn" onclick="show('analytics')">Open</button></div>
+<div class="card"><h3>🥗 Healthy Recipes</h3><p>Explore simple meal ideas.</p><button class="btn" onclick="show('recipes')">Open</button></div>
+</div>
+</section>
+
+<section id="thali">
+<h2>🍱 Build My Thali</h2>
+<p>Select foods to build your meal. Nutrition values are approximate per serving.</p>
+<div id="thaliList" class="grid"></div>
+<button class="btn" onclick="calculateThali()">Calculate Nutrition</button>
+<div id="thaliResult" class="result">Select foods and calculate your meal.</div>
+</section>
+
+<section id="swaps">
+<h2>🔄 Healthy Food Swaps</h2>
+<div class="grid">
+<div class="card"><h3>Sugary soda</h3><p>Try water or unsweetened lemon water.</p></div>
+<div class="card"><h3>Chips</h3><p>Try roasted chickpeas or a small handful of nuts.</p></div>
+<div class="card"><h3>White bread</h3><p>Try whole-grain bread when available.</p></div>
+<div class="card"><h3>Deep-fried snacks</h3><p>Try roasted, steamed, or baked snacks.</p></div>
+<div class="card"><h3>Sugary cereal</h3><p>Try oats with fruit and nuts.</p></div>
+<div class="card"><h3>Sweetened drinks</h3><p>Try plain milk or unsweetened alternatives.</p></div>
+<div class="card"><h3>Frequent sweets</h3><p>Try whole fruit for a naturally sweet option.</p></div>
+<div class="card"><h3>Excess salt</h3><p>Use herbs, spices, lemon, or garlic for flavour.</p></div>
+</div>
+</section>
+
+<section id="assistant">
+<h2>🤖 AI Recipe Assistant</h2>
+<p>This is a rule-based demo assistant, not a connected AI model.</p>
+<label>Ingredients you have</label>
+<input id="ingredients" placeholder="Example: rice, tomato, onion">
+<label>Meal type</label>
+<select id="mealType"><option>Any</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select>
+<button class="btn" onclick="suggestRecipe()">Suggest Recipe</button>
+<div id="assistantResult" class="result"></div>
+</section>
+
+<section id="scanner">
+<h2>📸 AI Food Nutrition Scanner</h2>
+<p>Choose a food to view its demo nutrition estimate. This version does not analyse photos.</p>
+<label>Search food</label>
+<input id="foodSearch" placeholder="Type a food name" oninput="searchFoods()">
+<select id="scanFood"></select>
+<button class="btn" onclick="scanNutrition()">Show Nutrition</button>
+<div id="scanResult" class="result"></div>
+<p class="small">A real photo scanner requires an image-analysis model or API.</p>
+</section>
+
+<section id="quiz">
+<h2>📝 Nutrition Quiz</h2>
+<div id="quizQuestion" class="result"></div>
+<div id="quizOptions"></div>
+<button class="btn" onclick="nextQuestion()">Next Question</button>
+<div id="quizScore" class="result">Score: 0</div>
+</section>
+
+<section id="water">
+<h2>💧 Water Tracker</h2>
+<p>Record glasses of water you drink. One demo glass equals 250 ml.</p>
+<h3 id="waterCount">0 glasses today</h3>
+<div class="grid">
+<button class="btn" onclick="addWater()">+ Add 1 glass</button>
+<button class="btn" onclick="removeWater()">− Remove 1 glass</button>
+<button class="btn" onclick="resetWater()">Reset today</button>
+</div>
+<div id="waterResult" class="result"></div>
+<p class="small">Water needs vary by activity, climate, age, and health. This is not a medical target.</p>
+</section>
+
+<section id="analytics">
+<h2>📈 Nutrition Analytics</h2>
+<div class="grid">
+<div class="card"><h3>Meals calculated</h3><h2 id="mealsStat">0</h2></div>
+<div class="card"><h3>Water glasses</h3><h2 id="waterStat">0</h2></div>
+<div class="card"><h3>Quiz score</h3><h2 id="quizStat">0</h2></div>
+</div>
+<p>These statistics are stored only for the current browser session.</p>
+<button class="btn" onclick="updateAnalytics()">Refresh Analytics</button>
+</section>
+
+<section id="recipes">
+<h2>🥗 Healthy Recipes</h2>
+<input id="recipeSearch" placeholder="Search recipes..." oninput="renderRecipes()">
+<div id="recipeList" class="grid"></div>
+</section>
+</main>
+</div>
+
+<footer>NutriAware | Nutrition Awareness Project | SDG 3: Good Health and Well-being</footer>
+
+<script>
+// Approximate demo values per serving, not medical or laboratory data.
+const foods = [
+{name:"Rice",category:"Grain",cal:206,protein:4.3,carbs:45,fat:0.4,fiber:0.6},
+{name:"Chapati",category:"Grain",cal:120,protein:3.5,carbs:20,fat:3,fiber:3},
+{name:"Dal",category:"Protein",cal:150,protein:9,carbs:25,fat:2,fiber:7},
+{name:"Chickpeas",category:"Protein",cal:164,protein:9,carbs:27,fat:2.6,fiber:7.6},
+{name:"Paneer",category:"Protein",cal:265,protein:18,carbs:3.5,fat:20,fiber:0},
+{name:"Egg",category:"Protein",cal:78,protein:6.3,carbs:0.6,fat:5.3,fiber:0},
+{name:"Milk",category:"Dairy",cal:122,protein:8,carbs:12,fat:5,fiber:0},
+{name:"Curd",category:"Dairy",cal:100,protein:5,fat:4,carbs:8,fiber:0},
+{name:"Oats",category:"Grain",cal:150,protein:5,carbs:27,fat:3,fiber:4},
+{name:"Apple",category:"Fruit",cal:95,protein:0.5,carbs:25,fat:0.3,fiber:4.4},
+{name:"Banana",category:"Fruit",cal:105,protein:1.3,carbs:27,fat:0.4,fiber:3.1},
+{name:"Orange",category:"Fruit",cal:62,protein:1.2,carbs:15,fat:0.2,fiber:3.1},
+{name:"Spinach",category:"Vegetable",cal:23,protein:2.9,carbs:3.6,fat:0.4,fiber:2.2},
+{name:"Carrot",category:"Vegetable",cal:41,protein:0.9,carbs:10,fat:0.2,fiber:2.8},
+{name:"Tomato",category:"Vegetable",cal:22,protein:1.1,carbs:4.8,fat:0.2,fiber:1.5},
+{name:"Potato",category:"Vegetable",cal:130,protein:3,carbs:30,fat:0.2,fiber:2.2},
+{name:"Peanuts",category:"Nuts",cal:166,protein:7,carbs:6,fat:14,fiber:2.4},
+{name:"Almonds",category:"Nuts",cal:164,protein:6,carbs:6,fat:14,fiber:3.5},
+{name:"Soybeans",category:"Protein",cal:172,protein:18,carbs:8,fat:9,fiber:6},
+{name:"Sweet potato",category:"Vegetable",cal:115,protein:2,carbs:27,fat:0.2,fiber:4},
+{name:"Poha",category:"Grain",cal:180,protein:4,carbs:35,fat:4,fiber:2},
+{name:"Idli",category:"Grain",cal:58,protein:2,carbs:12,fat:0.4,fiber:0.5},
+{name:"Dosa",category:"Grain",cal:168,protein:4,carbs:29,fat:4,fiber:1},
+{name:"Sprouts",category:"Protein",cal:100,protein:8,carbs:15,fat:1,fiber:5},
+{name:"Broccoli",category:"Vegetable",cal:35,protein:2.4,carbs:7,fat:0.4,fiber:3.3},
+{name:"Fish",category:"Protein",cal:180,protein:22,carbs:0,fat:10,fiber:0},
+{name:"Chicken",category:"Protein",cal:210,protein:30,carbs:0,fat:9,fiber:0},
+{name:"Quinoa",category:"Grain",cal:120,protein:4.4,carbs:21,fat:1.9,fiber:2.8},
+{name:"Cucumber",category:"Vegetable",cal:16,protein:0.7,carbs:3.6,fat:0.1,fiber:0.5},
+{name:"Mango",category:"Fruit",cal:100,protein:1.4,carbs:25,fat:0.6,fiber:3}
+];
+
+// Create a 150-item demo catalogue from foods and serving variations.
+// Variants are illustrative records, not independent verified food measurements.
+const dishes = [];
+foods.forEach((food,i)=>{
+  for(let v=1;v<=5;v++){
+    dishes.push({...food,id:i*5+v,name:v===1?food.name:food.name+" (serving "+v+")",
+      cal:Math.round(food.cal*v),protein:+(food.protein*v).toFixed(1),
+      carbs:Math.round(food.carbs*v),fat:+(food.fat*v).toFixed(1),
+      fiber:+((food.fiber||0)*v).toFixed(1)});
+  }
+});
+
+let mealCount=0, water=0, score=0, questionIndex=0;
+let answered={};
+const questions=[
+{q:"Which nutrient helps build and repair body tissues?",options:["Protein","Sugar","Water only"],answer:0},
+{q:"Which is a good source of dietary fibre?",options:["Whole grains","Soft drinks","Candy"],answer:0},
+{q:"Which drink helps maintain hydration?",options:["Water","Energy drink only","Syrup"],answer:0},
+{q:"Which food group commonly supplies vitamins and minerals?",options:["Fruits and vegetables","Candy only","Soft drinks"],answer:0},
+{q:"Which is generally a healthier snack choice?",options:["Fresh fruit","Large sugary soda","Excess sweets"],answer:0}
+];
+
+function login(){
+  const name=document.getElementById("username").value.trim();
+  if(!name){alert("Please enter your name.");return;}
+  document.getElementById("welcome").textContent=name;
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+  buildThali(); fillScanner(); renderRecipes(); showQuestion(); updateWater(); updateAnalytics();
+}
+function show(id){
+  document.querySelectorAll("main section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  if(id==="analytics")updateAnalytics();
+}
+function buildThali(){
+  const list=document.getElementById("thaliList");
+  list.innerHTML=foods.map((f,i)=>`<label class="card food">
+    <input type="checkbox" value="${i}"> <span>${f.name}<br><small>${f.cal} kcal per serving</small></span>
+  </label>`).join("");
+}
+function calculateThali(){
+  const selected=[...document.querySelectorAll("#thaliList input:checked")].map(x=>foods[+x.value]);
+  if(!selected.length){alert("Select at least one food.");return;}
+  const total=key=>selected.reduce((s,f)=>s+(f[key]||0),0);
+  mealCount++;
+  document.getElementById("thaliResult").textContent=
+    "Selected: "+selected.map(f=>f.name).join(", ")+
+    "\nEstimated calories: "+Math.round(total("cal"))+" kcal"+
+    "\nProtein: "+total("protein").toFixed(1)+" g"+
+    "\nCarbohydrates: "+total("carbs").toFixed(1)+" g"+
+    "\nFat: "+total("fat").toFixed(1)+" g"+
+    "\nFibre: "+total("fiber").toFixed(1)+" g"+
+    "\n\nTip: Aim for variety, including vegetables, protein foods, and grains.";
+}
+function fillScanner(){
+  document.getElementById("scanFood").innerHTML=foods.map((f,i)=>`<option value="${i}">${f.name}</option>`).join("");
+}
+function searchFoods(){
+  const q=document.getElementById("foodSearch").value.toLowerCase();
+  const matches=foods.map((f,i)=>({...f,i})).filter(f=>f.name.toLowerCase().includes(q));
+  document.getElementById("scanFood").innerHTML=matches.map(f=>`<option value="${f.i}">${f.name}</option>`).join("");
+}
+function scanNutrition(){
+  const f=foods[+document.getElementById("scanFood").value];
+  if(!f)return;
+  document.getElementById("scanResult").textContent=
+    f.name+"\nCalories: "+f.cal+" kcal"+
+    "\nProtein: "+f.protein+" g"+
+    "\nCarbohydrates: "+f.carbs+" g"+
+    "\nFat: "+f.fat+" g"+
+    "\nFibre: "+f.fiber+" g"+
+    "\n\nValues are approximate demo estimates per serving.";
+}
+function suggestRecipe(){
+  const input=document.getElementById("ingredients").value.toLowerCase();
+  const type=document.getElementById("mealType").value;
+  if(!input.trim()){alert("Enter ingredients first.");return;}
+  let suggestions=[];
+  if(input.includes("oat"))suggestions.push("Oats porridge with milk and fruit");
+  if(input.includes("rice"))suggestions.push("Rice bowl with vegetables and dal");
+  if(input.includes("egg"))suggestions.push("Vegetable egg scramble");
+  if(input.includes("paneer"))suggestions.push("Paneer and vegetable stir-fry");
+  if(input.includes("chickpea")||input.includes("chana"))suggestions.push("Chickpea salad with tomato and cucumber");
+  if(input.includes("banana"))suggestions.push("Banana and oats breakfast bowl");
+  if(input.includes("dal")||input.includes("lentil"))suggestions.push("Dal with chapati and vegetables");
+  if(!suggestions.length)suggestions.push("Try a balanced bowl with a grain, a protein food, and vegetables from your ingredients.");
+  document.getElementById("assistantResult").textContent=
+    "Meal type: "+type+"\nSuggestions:\n• "+suggestions.join("\n• ")+
+    "\n\nCheck ingredient availability and cook foods safely. This is a rule-based demo.";
+}
+function showQuestion(){
+  const q=questions[questionIndex%questions.length];
+  document.getElementById("quizQuestion").textContent=
+    "Question "+(questionIndex%questions.length+1)+": "+q.q;
+  document.getElementById("quizOptions").innerHTML=q.options.map((o,i)=>
+    `<p><button class="btn" onclick="answerQuestion(${i})">${o}</button></p>`).join("");
+}
+function answerQuestion(choice){
+  const key=questionIndex%questions.length;
+  if(answered[key])return;
+  answered[key]=true;
+  if(choice===questions[key].answer)score++;
+  document.getElementById("quizScore").textContent="Score: "+score;
+  document.getElementById("quizOptions").insertAdjacentHTML("beforeend",
+    `<p>${choice===questions[key].answer?"Correct!":"Not quite."}</p>`);
+}
+function nextQuestion(){
+  questionIndex++;
+  if(questionIndex%questions.length===0)answered={};
+  showQuestion();
+}
+function addWater(){water++;updateWater();}
+function removeWater(){water=Math.max(0,water-1);updateWater();}
+function resetWater(){water=0;updateWater();}
+function updateWater(){
+  document.getElementById("waterCount").textContent=water+" glasses today";
+  document.getElementById("waterResult").textContent=
+    "Recorded water: "+(water*250)+" ml\nYour intake is recorded for this demo session.";
+  if(document.getElementById("waterStat"))document.getElementById("waterStat").textContent=water;
+}
+function updateAnalytics(){
+  document.getElementById("mealsStat").textContent=mealCount;
+  document.getElementById("waterStat").textContent=water;
+  document.getElementById("quizStat").textContent=score;
+}
+const recipes=[
+{name:"Vegetable Poha",type:"Breakfast",desc:"Poha with peas, onion, lemon, and coriander."},
+{name:"Oats Porridge",type:"Breakfast",desc:"Oats cooked with milk or a suitable alternative, topped with fruit."},
+{name:"Dal and Chapati",type:"Lunch",desc:"Lentils served with chapati and seasonal vegetables."},
+{name:"Chickpea Salad",type:"Snack",desc:"Chickpeas, tomato, cucumber, lemon, and herbs."},
+{name:"Vegetable Khichdi",type:"Dinner",desc:"Rice and dal cooked with vegetables and mild spices."},
+{name:"Paneer Stir-Fry",type:"Dinner",desc:"Paneer cooked with colourful vegetables."},
+{name:"Fruit Bowl",type:"Snack",desc:"A mix of washed seasonal fruits."},
+{name:"Idli with Sambar",type:"Breakfast",desc:"Steamed idli served with lentil and vegetable sambar."},
+{name:"Sprouts Salad",type:"Snack",desc:"Sprouts with tomato, cucumber, lemon, and herbs."},
+{name:"Sweet Potato Bowl",type:"Lunch",desc:"Cooked sweet potato served with chickpeas and vegetables."}
+];
+function renderRecipes(){
+  const q=(document.getElementById("recipeSearch")?.value||"").toLowerCase();
+  const filtered=recipes.filter(r=>(r.name+" "+r.type+" "+r.desc).toLowerCase().includes(q));
+  document.getElementById("recipeList").innerHTML=filtered.map(r=>
+    `<div class="card"><h3>${r.name}</h3><p><b>${r.type}</b></p><p>${r.desc}</p></div>`).join("")||"No recipes found.";
+}
+</script>
+</body>
+</html>
