@@ -3,616 +3,466 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriAware | Healthy Food Awareness</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NutriAware - Healthy Food Awareness</title>
 <style>
-:root {
-  --green: #237747;
-  --light: #edf7ef;
-  --dark: #183c29;
-  --white: #ffffff;
-  --text: #34483a;
-  --border: #dce9df;
+:root{--green:#237747;--light:#edf7ef;--dark:#183c29;--border:#dce9df}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f8f5;color:#34483a}
+button,input,select{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 14px}
+.primary{background:var(--green);color:white}
+.secondary{background:var(--light);color:var(--dark)}
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:245px;background:white;border-right:1px solid var(--border);padding:22px 14px;overflow-y:auto;z-index:10}
+.brand{font-size:24px;font-weight:bold;color:var(--green)}
+.tagline{font-size:12px;color:#718175;margin:8px 0 25px}
+.profile{background:var(--light);padding:13px;border-radius:12px;margin-bottom:20px}
+.nav-label{font-size:11px;color:#819084;letter-spacing:1px;margin:18px 8px 9px}
+.nav-btn{display:block;width:100%;text-align:left;margin:4px 0;background:transparent;color:#42594a;padding:12px 9px}
+.nav-btn:hover,.nav-btn.active{background:var(--light);color:var(--green);font-weight:bold}
+#main{margin-left:245px;padding:25px;max-width:1600px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+.topbar h2{margin:0 0 7px;color:var(--dark)}
+.muted{font-size:13px;color:#718175;line-height:1.6}
+.hero{background:linear-gradient(120deg,#dff2e2,#f5fbef);padding:25px;border-radius:16px;margin-bottom:20px}
+.hero h1{margin-top:0;color:var(--dark)}
+.hero p{line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:20px}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:19px;margin-bottom:16px;min-width:0}
+.card h3{color:var(--dark);margin-top:0}
+.stat{font-size:27px;color:var(--green);font-weight:bold}
+.section{display:none}.section.active{display:block}
+label{display:block;font-weight:bold;font-size:14px;margin-top:10px}
+input,select{width:100%;padding:11px;border:1px solid #cfddd1;border-radius:8px;margin:7px 0 12px;background:white}
+.result{background:var(--light);padding:14px;border-radius:10px;margin-top:14px;line-height:1.7;overflow-wrap:anywhere}
+.food-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border)}
+.food-row:last-child{border-bottom:0}
+.recipe-emoji{font-size:32px}
+.option{display:block;background:#f2f7f2;padding:12px;border-radius:9px;margin:9px 0;cursor:pointer}
+.option input{width:auto;margin:0 8px 0 0}
+.progress{height:12px;background:#e5eee7;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--green);width:0}
+table{width:100%;border-collapse:collapse;background:white}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);font-size:13px}
+footer{text-align:center;padding:25px;color:#718175;font-size:12px}
+@media(max-width:800px){
+#sidebar{width:160px;padding:13px 8px}
+#main{margin-left:160px;padding:12px}
+.brand{font-size:18px}.nav-btn{font-size:12px;padding:10px 6px}
+.grid{grid-template-columns:1fr}.hero{padding:17px}
 }
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f8f5;
-  color: var(--text);
-}
-button, input, select { font: inherit; }
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 9px;
-  padding: 11px 15px;
-}
-.primary { background: var(--green); color: white; }
-.secondary { background: var(--light); color: var(--dark); }
-#sidebar {
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  width: 245px;
-  background: white;
-  border-right: 1px solid var(--border);
-  padding: 22px 15px;
-  overflow-y: auto;
-  z-index: 10;
-}
-.brand {
-  color: var(--green);
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-.tagline { font-size: 12px; color: #718175; margin-bottom: 30px; }
-.profile {
-  background: var(--light);
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 22px;
-}
-.profile strong { display: block; margin-bottom: 5px; }
-.profile small { color: #607567; }
-.nav-label {
-  font-size: 11px;
-  color: #819084;
-  letter-spacing: 1px;
-  margin: 18px 8px 9px;
-}
-.nav-btn {
-  display: block;
-  width: 100%;
-  text-align: left;
-  margin: 5px 0;
-  padding: 12px;
-  background: transparent;
-  color: #42594a;
-}
-.nav-btn:hover, .nav-btn.active {
-  background: var(--light);
-  color: var(--green);
-  font-weight: bold;
-}
-#main {
-  margin-left: 245px;
-  padding: 28px;
-  max-width: 1600px;
-}
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 25px;
-}
-.topbar h2 { margin: 0 0 7px; color: var(--dark); }
-.muted { color: #718175; font-size: 14px; }
-.hero {
-  background: linear-gradient(120deg, #dff2e2, #f5fbef);
-  border-radius: 18px;
-  padding: 28px;
-  margin-bottom: 22px;
-}
-.hero h1 { color: var(--dark); margin-top: 0; }
-.hero p { line-height: 1.6; max-width: 650px; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 22px;
-}
-.card {
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 20px;
-  box-shadow: 0 3px 12px #183c2908;
-}
-.card h3 { margin-top: 0; color: var(--dark); }
-.stat { font-size: 29px; font-weight: bold; color: var(--green); }
-.section { display: none; }
-.section.active { display: block; }
-input, select {
-  padding: 12px;
-  border: 1px solid #cfddd1;
-  border-radius: 8px;
-  width: 100%;
-  margin: 7px 0 14px;
-  background: white;
-}
-label { font-size: 14px; font-weight: bold; }
-.result {
-  background: var(--light);
-  border-radius: 10px;
-  padding: 14px;
-  margin-top: 14px;
-  line-height: 1.6;
-}
-.food-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.food-row:last-child { border-bottom: 0; }
-.recipe-emoji { font-size: 35px; }
-.progress {
-  height: 12px;
-  background: #e5eee7;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 12px 0;
-}
-.progress div { height: 100%; background: var(--green); width: 0; }
-.option {
-  display: block;
-  background: #f2f7f2;
-  padding: 12px;
-  border-radius: 9px;
-  margin: 9px 0;
-  cursor: pointer;
-}
-.option input { width: auto; margin: 0 8px 0 0; }
-footer { text-align: center; padding: 25px; color: #718175; font-size: 12px; }
-@media(max-width: 800px) {
-  #sidebar { width: 165px; padding: 15px 8px; }
-  #main { margin-left: 165px; padding: 15px; }
-  .brand { font-size: 19px; }
-  .nav-btn { padding: 10px 7px; font-size: 12px; }
-  .profile { padding: 9px; font-size: 12px; }
-  .grid { grid-template-columns: 1fr; }
-  .hero { padding: 18px; }
-}
-@media(max-width: 380px) {
-  #sidebar { width: 125px; }
-  #main { margin-left: 125px; padding: 10px; }
-  .nav-btn { font-size: 11px; }
+@media(max-width:380px){
+#sidebar{width:125px}#main{margin-left:125px;padding:9px}
+.nav-btn{font-size:11px}.brand{font-size:15px}
 }
 </style>
 </head>
-
 <body>
 
 <aside id="sidebar">
   <div class="brand">🥗 NutriAware</div>
   <div class="tagline">Eat smart. Live healthy.</div>
-
-  <div class="profile">
-    <strong>👋 Hello, Student!</strong>
-    <small>Your health matters every day.</small>
-  </div>
-
+  <div class="profile"><strong>👋 Hello, Student!</strong><br><small>Your health matters every day.</small></div>
   <div class="nav-label">MAIN MENU</div>
   <button class="nav-btn active" onclick="showPage('home',this)">🏠 Dashboard</button>
+  <button class="nav-btn" onclick="showPage('profilePlan',this)">👤 Personal Nutrition Plan</button>
   <button class="nav-btn" onclick="showPage('thali',this)">🍱 Build My Thali</button>
   <button class="nav-btn" onclick="showPage('swaps',this)">🔄 Healthy Food Swaps</button>
   <button class="nav-btn" onclick="showPage('recipes',this)">🥗 Healthy Recipes</button>
   <button class="nav-btn" onclick="showPage('lookup',this)">🔎 Food Lookup</button>
   <button class="nav-btn" onclick="showPage('quiz',this)">📝 Nutrition Quiz</button>
   <button class="nav-btn" onclick="showPage('water',this)">💧 Water Tracker</button>
-  <button class="nav-btn" onclick="showPage('analytics',this)">📊 Analytics</button>
-
+  <button class="nav-btn" onclick="showPage('analytics',this)">📊 Nutrition Analytics</button>
   <div class="nav-label">ABOUT</div>
   <button class="nav-btn" onclick="showPage('about',this)">ℹ️ About NutriAware</button>
 </aside>
 
 <main id="main">
-  <div class="topbar">
-    <div>
-      <h2 id="pageTitle">Your Health Dashboard</h2>
-      <div class="muted">Small healthy choices make a big difference.</div>
-    </div>
-    <div>🌱 Healthy living starts here</div>
+<div class="topbar">
+  <div><h2 id="pageTitle">Your Health Dashboard</h2><div class="muted">Small healthy choices make a big difference.</div></div>
+  <span>🌱 Healthy living starts here</span>
+</div>
+
+<section id="home" class="section active">
+  <div class="hero">
+    <h1>Welcome to NutriAware! 🥗</h1>
+    <p>Discover balanced meals, nutrition information, healthy recipes, and personalised educational nutrition estimates.</p>
+    <button class="primary" onclick="showPage('profilePlan',navButtons[1])">Create My Nutrition Plan →</button>
   </div>
+  <div class="grid">
+    <div class="card"><h3>👤 My Nutrition Plan</h3><div class="stat" id="homePlan">Not set</div><p class="muted">Enter your details to explore estimated daily nutrition goals.</p><button class="secondary" onclick="showPage('profilePlan',navButtons[1])">Set Up Plan</button></div>
+    <div class="card"><h3>💧 Water Today</h3><div class="stat" id="homeWater">0 glasses</div><p class="muted">Track your water intake.</p><button class="secondary" onclick="showPage('water',navButtons[7])">Track Water</button></div>
+    <div class="card"><h3>📝 Nutrition Quiz</h3><div class="stat" id="homeQuiz">Not taken</div><p class="muted">Test your healthy food knowledge.</p><button class="secondary" onclick="showPage('quiz',navButtons[6])">Start Quiz</button></div>
+  </div>
+  <div class="card">
+    <h3>🌟 Healthy Habits for Today</h3>
+    <div class="food-row">🥦 Eat a variety of vegetables and fruits <span>✓</span></div>
+    <div class="food-row">🌾 Include whole grains <span>✓</span></div>
+    <div class="food-row">🥜 Include protein-rich foods <span>✓</span></div>
+    <div class="food-row">💧 Drink water regularly <span>✓</span></div>
+    <div class="food-row">🏃 Stay physically active <span>✓</span></div>
+  </div>
+</section>
 
-  <!-- DASHBOARD -->
-  <section id="home" class="section active">
-    <div class="hero">
-      <h1>Welcome to NutriAware! 🥗</h1>
-      <p>Learn about nutrition, discover healthy foods, create a balanced Indian thali, and build better eating habits.</p>
-      <button class="primary" onclick="showPage('thali',document.querySelectorAll('.nav-btn')[1])">Build Your Thali →</button>
-    </div>
+<!-- PERSONAL NUTRITION PLAN -->
+<section id="profilePlan" class="section">
+  <div class="hero"><h1>👤 Personal Nutrition Plan</h1><p>Enter your age, weight, and height to view educational nutrition estimates and healthy eating suggestions.</p></div>
+  <div class="card">
+    <h3>Your Details</h3>
+    <label for="age">Age (years)</label>
+    <input type="number" id="age" min="1" max="120" placeholder="Example: 18">
+    <label for="weight">Weight (kg)</label>
+    <input type="number" id="weight" min="2" max="500" step="0.1" placeholder="Example: 60">
+    <label for="height">Height (cm)</label>
+    <input type="number" id="height" min="30" max="250" step="0.1" placeholder="Example: 170">
+    <label for="activity">Activity level</label>
+    <select id="activity">
+      <option value="low">Light activity</option>
+      <option value="moderate">Moderate activity</option>
+      <option value="high">High activity</option>
+    </select>
+    <button class="primary" onclick="makePlan()">Generate My Plan</button>
+    <button class="secondary" onclick="clearPlan()">Clear Details</button>
+    <div id="planResult" class="result">Your estimated nutrition plan will appear here.</div>
+  </div>
+  <div class="card">
+    <h3>🥗 General Healthy Eating Suggestions</h3>
+    <ul>
+      <li>Include protein sources such as dal, beans, eggs, milk, curd, tofu, or paneer.</li>
+      <li>Choose a variety of grains, including whole-grain options.</li>
+      <li>Eat different coloured vegetables and seasonal fruits.</li>
+      <li>Choose fibre-rich foods such as oats, beans, vegetables, fruit, and whole grains.</li>
+      <li>Reduce excess added sugar and highly salted packaged snacks.</li>
+    </ul>
+    <p class="muted">Estimates are not a medical diet plan. Children and teenagers need age-specific guidance. People who are pregnant, have medical conditions, or need therapeutic diets should consult a qualified healthcare professional or dietitian.</p>
+  </div>
+</section>
 
-    <div class="grid">
-      <div class="card">
-        <h3>💧 Water Today</h3>
-        <div class="stat" id="homeWater">0 glasses</div>
-        <p class="muted">Track your daily water intake.</p>
-        <button class="secondary" onclick="showPage('water',document.querySelectorAll('.nav-btn')[6])">Track Water</button>
-      </div>
-      <div class="card">
-        <h3>🍎 Food Lookup</h3>
-        <div class="stat">Eat Smart</div>
-        <p class="muted">Explore approximate nutrition information.</p>
-        <button class="secondary" onclick="showPage('lookup',document.querySelectorAll('.nav-btn')[4])">Explore Foods</button>
-      </div>
-      <div class="card">
-        <h3>📝 Test Yourself</h3>
-        <div class="stat">Take a Quiz</div>
-        <p class="muted">Check your nutrition knowledge.</p>
-        <button class="secondary" onclick="showPage('quiz',document.querySelectorAll('.nav-btn')[5])">Start Quiz</button>
-      </div>
-    </div>
+<section id="thali" class="section">
+  <div class="hero"><h1>🍱 Build My Thali</h1><p>Choose a mix of foods to plan a balanced meal.</p></div>
+  <div class="card">
+    <label>Staple food</label><select id="staple"><option>Roti</option><option>Rice</option><option>Brown rice</option><option>Millet bhakri</option><option>Whole-grain bread</option></select>
+    <label>Protein</label><select id="protein"><option>Dal</option><option>Chana</option><option>Rajma</option><option>Paneer</option><option>Egg</option><option>Tofu</option><option>Fish</option></select>
+    <label>Vegetables</label><select id="vegetable"><option>Mixed vegetables</option><option>Spinach</option><option>Bhindi</option><option>Carrot and peas</option><option>Seasonal vegetables</option></select>
+    <label>Extra</label><select id="extra"><option>Curd</option><option>Fruit</option><option>Salad</option><option>Nuts</option><option>Buttermilk</option></select>
+    <button class="primary" onclick="buildThali()">Create My Thali</button>
+    <div id="thaliResult" class="result">Your meal plan will appear here.</div>
+  </div>
+</section>
 
-    <div class="card">
-      <h3>🌟 Healthy Habits for Today</h3>
-      <div class="food-row">🥦 Eat fruits and vegetables <span>✓</span></div>
-      <div class="food-row">💧 Drink water regularly <span>✓</span></div>
-      <div class="food-row">🥜 Choose nutritious snacks <span>✓</span></div>
-      <div class="food-row">🏃 Stay physically active <span>✓</span></div>
-    </div>
-  </section>
+<section id="swaps" class="section">
+  <div class="hero"><h1>🔄 Healthy Food Swaps</h1><p>Try practical changes without giving up every favourite food.</p></div>
+  <div class="card">
+    <div class="food-row"><span>🥤 Sugary soft drink</span><span>→</span><strong>💧 Water or unsweetened drink</strong></div>
+    <div class="food-row"><span>🍟 Fried chips</span><span>→</span><strong>🥜 Roasted chana</strong></div>
+    <div class="food-row"><span>🍞 Refined bread</span><span>→</span><strong>🌾 Whole-grain bread</strong></div>
+    <div class="food-row"><span>🍬 Sweets every day</span><span>→</span><strong>🍎 Fruit more often</strong></div>
+    <div class="food-row"><span>🍜 Instant noodles alone</span><span>→</span><strong>🥦 Add vegetables and protein</strong></div>
+    <div class="food-row"><span>🍚 Only refined grains</span><span>→</span><strong>🌾 Try oats or whole grains</strong></div>
+    <div class="food-row"><span>🍪 Biscuits as a snack</span><span>→</span><strong>🥛 Plain yogurt or fruit</strong></div>
+    <div class="food-row"><span>🍗 Deep-fried foods often</span><span>→</span><strong>🔥 Baked, grilled, or steamed options</strong></div>
+    <div class="food-row"><span>🧂 Very salty snacks</span><span>→</span><strong>🌰 Unsalted nuts or seeds</strong></div>
+    <div class="food-row"><span>🧃 Sweetened packaged juice</span><span>→</span><strong>🍊 Whole fruit and water</strong></div>
+    <div class="food-row"><span>🍕 Meal with few vegetables</span><span>→</span><strong>🥗 Add a side salad or vegetables</strong></div>
+    <div class="food-row"><span>🍫 Frequent sugary snacks</span><span>→</span><strong>🥜 Try nuts or roasted pulses</strong></div>
+    <p class="muted">Food swaps are flexible suggestions. Dietary needs, allergies, affordability, and personal preferences matter.</p>
+  </div>
+</section>
 
-  <!-- BUILD THALI -->
-  <section id="thali" class="section">
-    <div class="hero">
-      <h1>🍱 Build My Thali</h1>
-      <p>Create a balanced Indian meal by choosing foods from different food groups.</p>
-    </div>
-    <div class="card">
-      <h3>Choose your meal</h3>
-      <label>Staple food</label>
-      <select id="staple">
-        <option value="Roti">Roti</option>
-        <option value="Rice">Rice</option>
-        <option value="Brown rice">Brown rice</option>
-        <option value="Millet bhakri">Millet bhakri</option>
-      </select>
-      <label>Protein</label>
-      <select id="protein">
-        <option value="Dal">Dal</option>
-        <option value="Chana">Chana</option>
-        <option value="Rajma">Rajma</option>
-        <option value="Paneer">Paneer</option>
-        <option value="Egg">Egg</option>
-      </select>
-      <label>Vegetables</label>
-      <select id="vegetable">
-        <option value="Mixed vegetables">Mixed vegetables</option>
-        <option value="Spinach">Spinach</option>
-        <option value="Bhindi">Bhindi</option>
-        <option value="Carrot and peas">Carrot and peas</option>
-      </select>
-      <label>Extra</label>
-      <select id="extra">
-        <option value="Curd">Curd</option>
-        <option value="Fruit">Fruit</option>
-        <option value="Salad">Salad</option>
-        <option value="Nuts">Nuts</option>
-      </select>
-      <button class="primary" onclick="buildThali()">Create My Thali</button>
-      <div id="thaliResult" class="result">Your meal plan will appear here.</div>
-    </div>
-  </section>
+<section id="recipes" class="section">
+  <div class="hero"><h1>🥗 Healthy Recipes</h1><p>Simple meal ideas using everyday ingredients.</p></div>
+  <div class="grid">
+    <div class="card"><div class="recipe-emoji">🥣</div><h3>Vegetable Poha</h3><p><b>Ingredients:</b> Poha, peas, onion, carrot, lemon.</p><p><b>Method:</b> Cook vegetables with spices, add rinsed poha, steam briefly, and finish with lemon.</p></div>
+    <div class="card"><div class="recipe-emoji">🥗</div><h3>Chana Salad</h3><p><b>Ingredients:</b> Boiled chana, tomato, cucumber, lemon.</p><p><b>Method:</b> Mix the ingredients, add lemon and spices, and serve fresh.</p></div>
+    <div class="card"><div class="recipe-emoji">🥞</div><h3>Moong Dal Chilla</h3><p><b>Ingredients:</b> Soaked moong dal, onion, spices.</p><p><b>Method:</b> Blend dal, mix in spices, and cook thin pancakes on a lightly oiled pan.</p></div>
+    <div class="card"><div class="recipe-emoji">🥛</div><h3>Fruit Yogurt Bowl</h3><p><b>Ingredients:</b> Plain yogurt and seasonal fruit.</p><p><b>Method:</b> Add chopped fruit to yogurt. Extra sugar is usually unnecessary.</p></div>
+    <div class="card"><div class="recipe-emoji">🥪</div><h3>Vegetable Sandwich</h3><p><b>Ingredients:</b> Whole-grain bread, tomato, cucumber, paneer.</p><p><b>Method:</b> Layer vegetables and paneer between bread slices.</p></div>
+    <div class="card"><div class="recipe-emoji">🍲</div><h3>Dal Vegetable Soup</h3><p><b>Ingredients:</b> Dal, carrot, tomato, spinach.</p><p><b>Method:</b> Simmer ingredients with water and spices until tender.</p></div>
+    <div class="card"><div class="recipe-emoji">🌾</div><h3>Vegetable Dalia</h3><p><b>Ingredients:</b> Broken wheat, peas, carrot, beans.</p><p><b>Method:</b> Cook the grains and vegetables with water and mild spices until soft.</p></div>
+    <div class="card"><div class="recipe-emoji">🫘</div><h3>Rajma Rice Bowl</h3><p><b>Ingredients:</b> Cooked rajma, rice, tomato, onion.</p><p><b>Method:</b> Simmer rajma in tomato gravy and serve with rice and vegetables.</p></div>
+    <div class="card"><div class="recipe-emoji">🥔</div><h3>Sprout Chaat</h3><p><b>Ingredients:</b> Properly prepared sprouts, tomato, onion, lemon.</p><p><b>Method:</b> Mix ingredients and season to taste. Cook sprouts thoroughly when food safety is a concern.</p></div>
+    <div class="card"><div class="recipe-emoji">🥣</div><h3>Oats Porridge</h3><p><b>Ingredients:</b> Oats, milk or fortified alternative, fruit.</p><p><b>Method:</b> Simmer oats in milk or water and top with fruit.</p></div>
+    <div class="card"><div class="recipe-emoji">🫓</div><h3>Besan Chilla</h3><p><b>Ingredients:</b> Besan, onion, tomato, coriander.</p><p><b>Method:</b> Make a batter with water and vegetables, then cook as a pancake.</p></div>
+    <div class="card"><div class="recipe-emoji">🥬</div><h3>Palak Dal</h3><p><b>Ingredients:</b> Dal, spinach, garlic, spices.</p><p><b>Method:</b> Cook dal and spinach until soft, then season to taste.</p></div>
+  </div>
+</section>
 
-  <!-- FOOD SWAPS -->
-  <section id="swaps" class="section">
-    <div class="hero">
-      <h1>🔄 Healthy Food Swaps</h1>
-      <p>Small changes can help you build healthier eating habits.</p>
-    </div>
-    <div class="card">
-      <div class="food-row"><span>🥤 Sugary soft drink</span><span>→</span><strong>💧 Water or unsweetened drink</strong></div>
-      <div class="food-row"><span>🍟 Fried chips</span><span>→</span><strong>🥜 Roasted chana</strong></div>
-      <div class="food-row"><span>🍞 Refined bread</span><span>→</span><strong>🌾 Whole-grain bread</strong></div>
-      <div class="food-row"><span>🍬 Frequent sweets</span><span>→</span><strong>🍎 Fresh fruit</strong></div>
-      <div class="food-row"><span>🍜 Instant noodles</span><span>→</span><strong>🥗 Vegetable-rich meal</strong></div>
-      <div class="food-row"><span>🍚 Only white rice</span><span>→</span><strong>🌾 Try varied whole grains</strong></div>
-      <p class="muted">You don't need to avoid every favourite food. Aim for variety and balance.</p>
-    </div>
-  </section>
+<section id="lookup" class="section">
+  <div class="hero"><h1>🔎 Food Nutrition Lookup</h1><p>Search for approximate nutrition information per typical serving.</p></div>
+  <div class="card">
+    <label>Search food</label><input id="foodSearch" placeholder="Try apple, rice, dal..." oninput="searchFood()">
+    <div id="foodResults">Enter a food name to begin.</div>
+    <p class="muted">Sample estimates only. Actual nutrition varies with serving size, recipe, and preparation. This demo does not analyse food photographs.</p>
+  </div>
+</section>
 
-  <!-- RECIPES -->
-  <section id="recipes" class="section">
-    <div class="hero">
-      <h1>🥗 Healthy Recipes</h1>
-      <p>Simple meal ideas for everyday life.</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <div class="recipe-emoji">🥣</div>
-        <h3>Vegetable Poha</h3>
-        <p>Ingredients: poha, peas, onion, carrot, lemon.</p>
-        <p><strong>Steps:</strong> Rinse poha. Cook vegetables with spices, add poha and steam briefly. Finish with lemon.</p>
-      </div>
-      <div class="card">
-        <div class="recipe-emoji">🥗</div>
-        <h3>Chana Salad</h3>
-        <p>Ingredients: boiled chana, tomato, cucumber, lemon.</p>
-        <p><strong>Steps:</strong> Mix the ingredients, add lemon and your preferred spices, and serve fresh.</p>
-      </div>
-      <div class="card">
-        <div class="recipe-emoji">🥞</div>
-        <h3>Moong Dal Chilla</h3>
-        <p>Ingredients: soaked moong dal, spices, onion.</p>
-        <p><strong>Steps:</strong> Blend dal with water, mix in spices, and cook thin pancakes on a pan.</p>
-      </div>
-      <div class="card">
-        <div class="recipe-emoji">🥛</div>
-        <h3>Fruit Yogurt Bowl</h3>
-        <p>Ingredients: plain yogurt and seasonal fruit.</p>
-        <p><strong>Steps:</strong> Add chopped fruit to yogurt. Avoid adding extra sugar if not needed.</p>
-      </div>
-      <div class="card">
-        <div class="recipe-emoji">🥪</div>
-        <h3>Vegetable Sandwich</h3>
-        <p>Ingredients: whole-grain bread, cucumber, tomato, paneer.</p>
-        <p><strong>Steps:</strong> Layer the vegetables and paneer between bread slices and serve.</p>
-      </div>
-      <div class="card">
-        <div class="recipe-emoji">🍲</div>
-        <h3>Dal Vegetable Soup</h3>
-        <p>Ingredients: cooked dal, carrot, tomato, spinach.</p>
-        <p><strong>Steps:</strong> Simmer the ingredients with water and spices until tender.</p>
-      </div>
-    </div>
-  </section>
+<section id="quiz" class="section">
+  <div class="hero"><h1>📝 Nutrition Quiz</h1><p>Answer all five questions to test your knowledge.</p></div>
+  <div class="card">
+    <form id="quizForm">
+      <h3>1. Which is a source of protein?</h3>
+      <label class="option"><input type="radio" name="q1" value="a"> Candy</label>
+      <label class="option"><input type="radio" name="q1" value="b"> Dal</label>
+      <label class="option"><input type="radio" name="q1" value="c"> Soft drink</label>
+      <h3>2. Which drink is important for hydration?</h3>
+      <label class="option"><input type="radio" name="q2" value="a"> Water</label>
+      <label class="option"><input type="radio" name="q2" value="b"> Sugary soda</label>
+      <label class="option"><input type="radio" name="q2" value="c"> Candy</label>
+      <h3>3. Why eat different coloured vegetables?</h3>
+      <label class="option"><input type="radio" name="q3" value="a"> For a variety of nutrients</label>
+      <label class="option"><input type="radio" name="q3" value="b"> To avoid drinking water</label>
+      <label class="option"><input type="radio" name="q3" value="c"> To eat only sugar</label>
+      <h3>4. Which is a whole-grain option?</h3>
+      <label class="option"><input type="radio" name="q4" value="a"> Brown rice</label>
+      <label class="option"><input type="radio" name="q4" value="b"> Candy</label>
+      <label class="option"><input type="radio" name="q4" value="c"> Soft drink</label>
+      <h3>5. What helps make a balanced meal?</h3>
+      <label class="option"><input type="radio" name="q5" value="a"> Eating only one food</label>
+      <label class="option"><input type="radio" name="q5" value="b"> Including a variety of food groups</label>
+      <label class="option"><input type="radio" name="q5" value="c"> Skipping every meal</label>
+      <button class="primary" type="button" onclick="checkQuiz()">Submit Answers</button>
+    </form>
+    <div id="quizResult" class="result">Your score will appear here.</div>
+  </div>
+</section>
 
-  <!-- FOOD LOOKUP -->
-  <section id="lookup" class="section">
-    <div class="hero">
-      <h1>🔎 Food Nutrition Lookup</h1>
-      <p>Search for a food to see approximate nutrition information per typical serving.</p>
-    </div>
-    <div class="card">
-      <label>Search for a food</label>
-      <input id="foodSearch" placeholder="Example: apple, rice, egg..." oninput="searchFood()">
-      <div id="foodResults"></div>
-      <p class="muted">Values are estimates and vary by portion size, preparation, and ingredients. This demo does not scan food images.</p>
-    </div>
-  </section>
+<section id="water" class="section">
+  <div class="hero"><h1>💧 Water Tracker</h1><p>Track your water intake throughout the day.</p></div>
+  <div class="card">
+    <h3>Today's water intake</h3><div class="stat" id="waterCount">0 glasses</div>
+    <div class="progress"><div id="waterBar"></div></div>
+    <p id="waterMessage" class="muted">Start tracking your water.</p>
+    <button class="primary" onclick="changeWater(1)">+ Add a Glass</button>
+    <button class="secondary" onclick="changeWater(-1)">− Remove a Glass</button>
+    <button class="secondary" onclick="resetWater()">Reset</button>
+    <p class="muted">Water needs vary by person, weather, activity, and health.</p>
+  </div>
+</section>
 
-  <!-- QUIZ -->
-  <section id="quiz" class="section">
-    <div class="hero">
-      <h1>📝 Nutrition Quiz</h1>
-      <p>Answer these questions to test your healthy eating knowledge.</p>
-    </div>
-    <div class="card">
-      <form id="quizForm">
-        <h3>1. Which food is a good source of protein?</h3>
-        <label class="option"><input type="radio" name="q1" value="a"> Candy</label>
-        <label class="option"><input type="radio" name="q1" value="b"> Dal</label>
-        <label class="option"><input type="radio" name="q1" value="c"> Soft drink</label>
+<section id="analytics" class="section">
+  <div class="hero"><h1>📊 Nutrition Analytics</h1><p>Your profile, estimated daily goals, and activity in one place.</p></div>
+  <div class="grid">
+    <div class="card"><h3>👤 Age</h3><div class="stat" id="aAge">—</div></div>
+    <div class="card"><h3>⚖️ Weight</h3><div class="stat" id="aWeight">—</div></div>
+    <div class="card"><h3>📏 Height</h3><div class="stat" id="aHeight">—</div></div>
+    <div class="card"><h3>💪 Protein Goal</h3><div class="stat" id="aProtein">—</div></div>
+    <div class="card"><h3>🍞 Carbohydrates</h3><div class="stat" id="aCarbs">—</div></div>
+    <div class="card"><h3>🌾 Grains</h3><div class="stat" id="aGrains">—</div></div>
+    <div class="card"><h3>🥦 Vegetables</h3><div class="stat" id="aVeg">—</div></div>
+    <div class="card"><h3>🌿 Fibre</h3><div class="stat" id="aFiber">—</div></div>
+    <div class="card"><h3>💧 Water Logged</h3><div class="stat" id="aWater">0 glasses</div></div>
+    <div class="card"><h3>📝 Quiz Score</h3><div class="stat" id="aQuiz">Not taken</div></div>
+    <div class="card"><h3>🍱 Thali</h3><div class="stat" id="aThali">Not created</div></div>
+    <div class="card"><h3>📈 Plan Status</h3><div class="stat" id="aPlan">Not set</div></div>
+  </div>
+  <div class="card">
+    <h3>Personalised Plan Summary</h3>
+    <div id="analyticsSummary" class="result">Enter your details in Personal Nutrition Plan to see your estimates here.</div>
+    <p class="muted">These are educational estimates, not a diagnosis or personalised medical prescription. The figures do not replace a qualified dietitian's advice.</p>
+  </div>
+</section>
 
-        <h3>2. Which drink is usually the best for hydration?</h3>
-        <label class="option"><input type="radio" name="q2" value="a"> Water</label>
-        <label class="option"><input type="radio" name="q2" value="b"> Sugary soda</label>
-        <label class="option"><input type="radio" name="q2" value="c"> Energy drink</label>
-
-        <h3>3. Why should we eat different coloured vegetables?</h3>
-        <label class="option"><input type="radio" name="q3" value="a"> For variety of nutrients</label>
-        <label class="option"><input type="radio" name="q3" value="b"> To eat only sugar</label>
-        <label class="option"><input type="radio" name="q3" value="c"> To avoid water</label>
-
-        <h3>4. Which is a whole-grain option?</h3>
-        <label class="option"><input type="radio" name="q4" value="a"> Brown rice</label>
-        <label class="option"><input type="radio" name="q4" value="b"> Candy</label>
-        <label class="option"><input type="radio" name="q4" value="c"> Soft drink</label>
-
-        <h3>5. What makes a meal more balanced?</h3>
-        <label class="option"><input type="radio" name="q5" value="a"> Eating only one food</label>
-        <label class="option"><input type="radio" name="q5" value="b"> Variety of food groups</label>
-        <label class="option"><input type="radio" name="q5" value="c"> Skipping every meal</label>
-
-        <button class="primary" type="button" onclick="checkQuiz()">Submit Answers</button>
-      </form>
-      <div id="quizResult" class="result">Your score will appear here.</div>
-    </div>
-  </section>
-
-  <!-- WATER TRACKER -->
-  <section id="water" class="section">
-    <div class="hero">
-      <h1>💧 Water Tracker</h1>
-      <p>Keep track of the glasses of water you drink today.</p>
-    </div>
-    <div class="card">
-      <h3>Today's water intake</h3>
-      <div class="stat" id="waterCount">0 glasses</div>
-      <div class="progress"><div id="waterBar"></div></div>
-      <p id="waterMessage" class="muted">Track your progress throughout the day.</p>
-      <button class="primary" onclick="changeWater(1)">+ Add a Glass</button>
-      <button class="secondary" onclick="changeWater(-1)">− Remove a Glass</button>
-      <button class="secondary" onclick="resetWater()">Reset</button>
-      <p class="muted">Water needs vary with activity, weather, and individual health. This tracker is not a medical recommendation.</p>
-    </div>
-  </section>
-
-  <!-- ANALYTICS -->
-  <section id="analytics" class="section">
-    <div class="hero">
-      <h1>📊 Nutrition Analytics</h1>
-      <p>A simple overview of your activity in this demo.</p>
-    </div>
-    <div class="grid">
-      <div class="card">
-        <h3>💧 Water Logged</h3>
-        <div class="stat" id="analyticsWater">0</div>
-        <p class="muted">Glasses tracked today</p>
-      </div>
-      <div class="card">
-        <h3>📝 Quiz Score</h3>
-        <div class="stat" id="analyticsQuiz">—</div>
-        <p class="muted">Most recent quiz result</p>
-      </div>
-      <div class="card">
-        <h3>🍱 Meal Planner</h3>
-        <div class="stat" id="analyticsThali">Not created</div>
-        <p class="muted">Your thali planning status</p>
-      </div>
-    </div>
-    <div class="card">
-      <h3>Understanding your nutrition</h3>
-      <p>Healthy eating includes variety, suitable portions, vegetables, fruits, whole grains, and protein sources. Nutrition needs are different for each person.</p>
-      <p class="muted">This page shows activity in the current browser session. It is not a clinical nutrition assessment.</p>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="section">
-    <div class="hero">
-      <h1>ℹ️ About NutriAware</h1>
-      <p>NutriAware is a nutrition and healthy food awareness project designed to encourage informed food choices.</p>
-    </div>
-    <div class="card">
-      <h3>🎯 Project Objective</h3>
-      <p>To make basic nutrition information easy to understand and help users develop healthier eating habits.</p>
-      <h3>🌍 Sustainable Development Goal</h3>
-      <p><strong>SDG 3: Good Health and Well-being.</strong> The project promotes nutrition awareness as part of a healthy lifestyle.</p>
-      <h3>✨ Main Features</h3>
-      <p>Balanced meal planning, food swaps, recipes, nutrition lookup, quizzes, water tracking, and activity analytics.</p>
-      <h3>⚠️ Important Note</h3>
-      <p>This is an educational demo. Nutrition values are approximate. It does not provide medical advice, real AI image scanning, or personalised clinical recommendations.</p>
-    </div>
-  </section>
-
-  <footer>🥗 NutriAware — Nutrition and Healthy Food Awareness System</footer>
+<section id="about" class="section">
+  <div class="hero"><h1>ℹ️ About NutriAware</h1><p>Nutrition and Healthy Food Awareness System.</p></div>
+  <div class="card">
+    <h3>🎯 Objective</h3><p>To help users learn about nutrition and make informed food choices.</p>
+    <h3>🌍 Sustainable Development Goal</h3><p><b>SDG 3: Good Health and Well-being.</b> The project promotes healthy eating awareness.</p>
+    <h3>✨ Features</h3><p>Personal nutrition estimates, meal planning, food swaps, recipes, nutrition lookup, quizzes, water tracking, and analytics.</p>
+    <h3>⚠️ Important</h3><p>This is an educational frontend demo. It does not diagnose conditions, provide medical diets, or use real AI food-image analysis.</p>
+  </div>
+</section>
+<footer>🥗 NutriAware — Nutrition and Healthy Food Awareness System</footer>
 </main>
 
 <script>
+const navButtons = Array.from(document.querySelectorAll(".nav-btn"));
 const titles = {
-  home: "Your Health Dashboard",
-  thali: "Build My Thali",
-  swaps: "Healthy Food Swaps",
-  recipes: "Healthy Recipes",
-  lookup: "Food Nutrition Lookup",
-  quiz: "Nutrition Quiz",
-  water: "Water Tracker",
-  analytics: "Nutrition Analytics",
-  about: "About NutriAware"
+home:"Your Health Dashboard",profilePlan:"Personal Nutrition Plan",
+thali:"Build My Thali",swaps:"Healthy Food Swaps",recipes:"Healthy Recipes",
+lookup:"Food Nutrition Lookup",quiz:"Nutrition Quiz",water:"Water Tracker",
+analytics:"Nutrition Analytics",about:"About NutriAware"
 };
+let water = 0, quizScore = null, thaliCreated = false, userPlan = null;
 
-function showPage(id, button) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+function showPage(id,button){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-  if (button) button.classList.add("active");
-  document.getElementById("pageTitle").textContent = titles[id] || "NutriAware";
-  if (id === "analytics") updateAnalytics();
-  window.scrollTo(0, 0);
+  navButtons.forEach(b=>b.classList.remove("active"));
+  if(button) button.classList.add("active");
+  document.getElementById("pageTitle").textContent=titles[id];
+  if(id==="analytics") updateAnalytics();
+  window.scrollTo(0,0);
 }
 
-let water = 0;
-let quizScore = null;
-let thaliCreated = false;
+function makePlan(){
+  const age=Number(document.getElementById("age").value);
+  const weight=Number(document.getElementById("weight").value);
+  const height=Number(document.getElementById("height").value);
+  const activity=document.getElementById("activity").value;
+  const out=document.getElementById("planResult");
 
-function buildThali() {
-  const staple = document.getElementById("staple").value;
-  const protein = document.getElementById("protein").value;
-  const vegetable = document.getElementById("vegetable").value;
-  const extra = document.getElementById("extra").value;
+  if(!age||!weight||!height||age<1||age>120||weight<2||weight>500||height<30||height>250){
+    out.textContent="Please enter a valid age, weight, and height.";
+    return;
+  }
 
-  document.getElementById("thaliResult").innerHTML =
-    "<strong>🍱 Your Balanced Thali</strong><br>" +
-    "🌾 Staple: " + staple + "<br>" +
-    "💪 Protein: " + protein + "<br>" +
-    "🥦 Vegetables: " + vegetable + "<br>" +
-    "🍎 Extra: " + extra +
-    "<br><br>Tip: Aim for a variety of food groups and portions that suit your needs.";
+  const adult=age>=18;
+  const bmi=weight/Math.pow(height/100,2);
+  let protein,carbs,fiber,grains,vegetables,notes;
 
-  thaliCreated = true;
+  if(adult){
+    // Rough reference estimates only; not suitable for individual medical diets.
+    const proteinG=Math.round(weight*0.8);
+    const caloriesLow=weight*25;
+    const caloriesHigh=weight*30;
+    const carbLow=Math.round(caloriesLow*0.45/4);
+    const carbHigh=Math.round(caloriesHigh*0.65/4);
+    const fiberLow=Math.round(caloriesLow/1000*14);
+    const fiberHigh=Math.round(caloriesHigh/1000*14);
+    protein=proteinG+" g/day (basic adult reference)";
+    carbs=carbLow+"–"+carbHigh+" g/day (rough estimate)";
+    fiber=fiberLow+"–"+fiberHigh+" g/day (rough estimate)";
+    grains="Choose whole grains; often 3–6 servings, depending on needs";
+    vegetables="Aim for about 2–3 cups daily as a general adult guide";
+    notes="The calorie-based estimates are simplified and may not match your needs. Activity, sex, goals, health, and individual circumstances affect requirements.";
+  } else {
+    protein="Needs age-specific guidance";
+    carbs="Needs age-specific guidance";
+    fiber="Needs age-specific guidance";
+    grains="Include varied grains appropriate for your age";
+    vegetables="Include varied vegetables and fruits daily";
+    notes="Because you are under 18, growth and development affect nutritional needs. Please use guidance from a qualified healthcare professional or registered dietitian rather than adult formulas.";
+  }
+
+  userPlan={age,weight,height,activity,bmi,adult,protein,carbs,fiber,grains,vegetables};
+  document.getElementById("homePlan").textContent="Profile saved";
+  out.innerHTML="<strong>🌱 Your Educational Nutrition Estimates</strong><br>"+
+    "Age: "+age+" years<br>Weight: "+weight+" kg<br>Height: "+height+" cm<br>"+
+    "Activity level: "+activity+"<br><br>"+
+    "<strong>💪 Protein:</strong> "+protein+"<br>"+
+    "<strong>🍞 Carbohydrates:</strong> "+carbs+"<br>"+
+    "<strong>🌿 Fibre:</strong> "+fiber+"<br>"+
+    "<strong>🌾 Grains:</strong> "+grains+"<br>"+
+    "<strong>🥦 Vegetables:</strong> "+vegetables+"<br><br>"+
+    "<strong>More suggestions</strong><br>"+
+    "• Include protein foods such as dal, beans, eggs, dairy, tofu, or paneer.<br>"+
+    "• Choose whole grains and a variety of seasonal vegetables and fruits.<br>"+
+    "• Include fibre-rich foods gradually and drink enough fluids.<br>"+
+    "• Limit excess added sugar and highly salted packaged foods.<br><br>"+
+    "<strong>Important:</strong> "+notes+
+    (adult?"<br><br>BMI calculation: "+bmi.toFixed(1)+" kg/m². Adult BMI is only a screening measure and does not by itself determine health or dietary needs.":"");
   updateAnalytics();
 }
 
-const foods = [
-  {name:"Apple", cal:95, protein:0.5, fiber:4.4},
-  {name:"Banana", cal:105, protein:1.3, fiber:3.1},
-  {name:"Orange", cal:62, protein:1.2, fiber:3.1},
-  {name:"Cooked rice", cal:205, protein:4.3, fiber:0.6},
-  {name:"Roti", cal:120, protein:3.5, fiber:3},
-  {name:"Cooked dal", cal:150, protein:9, fiber:8},
-  {name:"Boiled egg", cal:78, protein:6.3, fiber:0},
-  {name:"Milk", cal:122, protein:8, fiber:0},
-  {name:"Plain curd", cal:100, protein:5, fiber:0},
-  {name:"Paneer", cal:265, protein:18, fiber:0},
-  {name:"Boiled chana", cal:164, protein:8.9, fiber:7.6},
-  {name:"Cooked rajma", cal:225, protein:15, fiber:11},
-  {name:"Cooked spinach", cal:41, protein:5.3, fiber:4.3},
-  {name:"Carrot", cal:25, protein:0.6, fiber:1.7},
-  {name:"Peanuts", cal:160, protein:7, fiber:2.4},
-  {name:"Oats", cal:150, protein:5, fiber:4},
-  {name:"Potato", cal:130, protein:3, fiber:2.2},
-  {name:"Tomato", cal:22, protein:1.1, fiber:1.5},
-  {name:"Cucumber", cal:16, protein:0.7, fiber:0.5},
-  {name:"Brown rice", cal:215, protein:5, fiber:3.5}
+function clearPlan(){
+  ["age","weight","height"].forEach(id=>document.getElementById(id).value="");
+  userPlan=null;
+  document.getElementById("planResult").textContent="Your estimated nutrition plan will appear here.";
+  document.getElementById("homePlan").textContent="Not set";
+  updateAnalytics();
+}
+
+function buildThali(){
+  const staple=document.getElementById("staple").value;
+  const protein=document.getElementById("protein").value;
+  const vegetable=document.getElementById("vegetable").value;
+  const extra=document.getElementById("extra").value;
+  document.getElementById("thaliResult").innerHTML=
+    "<strong>🍱 Your Balanced Thali</strong><br>🌾 Staple: "+staple+
+    "<br>💪 Protein: "+protein+"<br>🥦 Vegetables: "+vegetable+
+    "<br>🍎 Extra: "+extra+
+    "<br><br>Try a variety of food groups and portions that suit your needs.";
+  thaliCreated=true;
+  updateAnalytics();
+}
+
+const foods=[
+{name:"Apple",cal:95,protein:.5,carbs:25,fiber:4.4},
+{name:"Banana",cal:105,protein:1.3,carbs:27,fiber:3.1},
+{name:"Orange",cal:62,protein:1.2,carbs:15,fiber:3.1},
+{name:"Cooked rice",cal:205,protein:4.3,carbs:45,fiber:.6},
+{name:"Roti",cal:120,protein:3.5,carbs:20,fiber:3},
+{name:"Cooked dal",cal:150,protein:9,carbs:25,fiber:8},
+{name:"Boiled egg",cal:78,protein:6.3,carbs:.6,fiber:0},
+{name:"Milk",cal:122,protein:8,carbs:12,fiber:0},
+{name:"Plain curd",cal:100,protein:5,carbs:7,fiber:0},
+{name:"Paneer",cal:265,protein:18,carbs:4,fiber:0},
+{name:"Boiled chana",cal:164,protein:8.9,carbs:27,fiber:7.6},
+{name:"Cooked rajma",cal:225,protein:15,carbs:40,fiber:11},
+{name:"Spinach",cal:41,protein:5.3,carbs:7,fiber:4.3},
+{name:"Carrot",cal:25,protein:.6,carbs:6,fiber:1.7},
+{name:"Peanuts",cal:160,protein:7,carbs:6,fiber:2.4},
+{name:"Oats",cal:150,protein:5,carbs:27,fiber:4},
+{name:"Potato",cal:130,protein:3,carbs:30,fiber:2.2},
+{name:"Tomato",cal:22,protein:1.1,carbs:5,fiber:1.5},
+{name:"Cucumber",cal:16,protein:.7,carbs:4,fiber:.5},
+{name:"Brown rice",cal:215,protein:5,carbs:45,fiber:3.5},
+{name:"Almonds",cal:164,protein:6,carbs:6,fiber:3.5},
+{name:"Sweet potato",cal:115,protein:2,carbs:27,fiber:4},
+{name:"Tofu",cal:90,protein:10,carbs:2,fiber:1},
+{name:"Broccoli",cal:35,protein:2.4,carbs:7,fiber:3.3}
 ];
 
-function searchFood() {
-  const q = document.getElementById("foodSearch").value.trim().toLowerCase();
-  const area = document.getElementById("foodResults");
-  if (!q) {
-    area.innerHTML = "<p class='muted'>Enter a food name to search.</p>";
-    return;
-  }
-  const matches = foods.filter(f => f.name.toLowerCase().includes(q));
-  if (!matches.length) {
-    area.innerHTML = "<p>No matching food found in this demo. Try apple, banana, rice, dal, or egg.</p>";
-    return;
-  }
-  area.innerHTML = matches.map(f =>
-    "<div class='food-row'><div><strong>" + f.name + "</strong><br><small>" +
-    f.cal + " kcal · Protein " + f.protein + " g · Fibre " + f.fiber +
-    " g</small></div></div>"
-  ).join("");
+function searchFood(){
+  const q=document.getElementById("foodSearch").value.trim().toLowerCase();
+  const area=document.getElementById("foodResults");
+  if(!q){area.textContent="Enter a food name to begin.";return;}
+  const matches=foods.filter(f=>f.name.toLowerCase().includes(q));
+  if(!matches.length){area.textContent="No match found. Try apple, banana, rice, dal, oats, or egg.";return;}
+  area.innerHTML=matches.map(f=>"<div class='food-row'><div><strong>"+f.name+
+    "</strong><br><small>Approx. "+f.cal+" kcal · Protein "+f.protein+
+    " g · Carbs "+f.carbs+" g · Fibre "+f.fiber+" g per typical serving</small></div></div>").join("");
 }
 
-function changeWater(amount) {
-  water = Math.max(0, water + amount);
-  document.getElementById("waterCount").textContent = water + " glasses";
-  document.getElementById("homeWater").textContent = water + " glasses";
-  document.getElementById("waterBar").style.width = Math.min(100, water / 8 * 100) + "%";
-  document.getElementById("waterMessage").textContent =
-    water >= 8 ? "You've logged 8 or more glasses. Individual needs vary." :
-    "You've logged " + water + " glass(es). Keep tracking your intake.";
+function changeWater(amount){
+  water=Math.max(0,water+amount);
+  document.getElementById("waterCount").textContent=water+" glasses";
+  document.getElementById("homeWater").textContent=water+" glasses";
+  document.getElementById("waterBar").style.width=Math.min(100,water/8*100)+"%";
+  document.getElementById("waterMessage").textContent=water+" glass(es) logged. Individual water needs vary.";
+  updateAnalytics();
+}
+function resetWater(){water=0;changeWater(0);}
+
+function checkQuiz(){
+  const answers={q1:"b",q2:"a",q3:"a",q4:"a",q5:"b"};
+  let score=0,answered=0;
+  for(const q in answers){
+    const selected=document.querySelector('input[name="'+q+'"]:checked');
+    if(selected){answered++;if(selected.value===answers[q])score++;}
+  }
+  if(answered<5){document.getElementById("quizResult").textContent="Please answer all five questions.";return;}
+  quizScore=score;
+  document.getElementById("quizResult").innerHTML="<strong>Your score: "+score+"/5</strong><br>"+
+    (score===5?"Excellent!":score>=3?"Good effort! Keep learning.":"Keep practising and review the healthy food sections.");
+  document.getElementById("homeQuiz").textContent=score+"/5";
   updateAnalytics();
 }
 
-function resetWater() {
-  water = 0;
-  changeWater(0);
-}
-
-function checkQuiz() {
-  const answers = {q1:"b", q2:"a", q3:"a", q4:"a", q5:"b"};
-  let score = 0;
-  let answered = 0;
-
-  for (const q in answers) {
-    const selected = document.querySelector('input[name="' + q + '"]:checked');
-    if (selected) {
-      answered++;
-      if (selected.value === answers[q]) score++;
-    }
+function updateAnalytics(){
+  document.getElementById("aWater").textContent=water+" glasses";
+  document.getElementById("aQuiz").textContent=quizScore===null?"Not taken":quizScore+"/5";
+  document.getElementById("aThali").textContent=thaliCreated?"Created ✓":"Not created";
+  document.getElementById("aPlan").textContent=userPlan?"Generated ✓":"Not set";
+  if(userPlan){
+    document.getElementById("aAge").textContent=userPlan.age+" years";
+    document.getElementById("aWeight").textContent=userPlan.weight+" kg";
+    document.getElementById("aHeight").textContent=userPlan.height+" cm";
+    document.getElementById("aProtein").textContent=userPlan.protein;
+    document.getElementById("aCarbs").textContent=userPlan.carbs;
+    document.getElementById("aGrains").textContent=userPlan.grains;
+    document.getElementById("aVeg").textContent=userPlan.vegetables;
+    document.getElementById("aFiber").textContent=userPlan.fiber;
+    document.getElementById("analyticsSummary").textContent=
+      "Profile: age "+userPlan.age+", weight "+userPlan.weight+" kg, height "+userPlan.height+
+      " cm. Activity level: "+userPlan.activity+". Estimated protein: "+userPlan.protein+
+      ". Estimated carbohydrates: "+userPlan.carbs+". Fibre: "+userPlan.fiber+
+      ". Grains: "+userPlan.grains+". Vegetables: "+userPlan.vegetables+
+      ". These are educational estimates, not a personalised medical prescription.";
+  }else{
+    ["aAge","aWeight","aHeight","aProtein","aCarbs","aGrains","aVeg","aFiber"].forEach(id=>document.getElementById(id).textContent="—");
+    document.getElementById("analyticsSummary").textContent="Enter your details in Personal Nutrition Plan to display nutrition estimates here.";
   }
-
-  if (answered < 5) {
-    document.getElementById("quizResult").textContent =
-      "Please answer all 5 questions before submitting.";
-    return;
-  }
-
-  quizScore = score;
-  document.getElementById("quizResult").innerHTML =
-    "<strong>Your score: " + score + " / 5</strong><br>" +
-    (score === 5 ? "Excellent! You know your nutrition basics." :
-     score >= 3 ? "Good effort! Keep learning about healthy food." :
-     "Keep practising. Review the healthy food sections and try again.");
-  updateAnalytics();
-}
-
-function updateAnalytics() {
-  document.getElementById("analyticsWater").textContent = water;
-  document.getElementById("analyticsQuiz").textContent =
-    quizScore === null ? "—" : quizScore + " / 5";
-  document.getElementById("analyticsThali").textContent =
-    thaliCreated ? "Created ✓" : "Not created";
 }
 </script>
 </body>
