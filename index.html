@@ -1,1256 +1,335 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NutriAware | Smart Nutrition</title>
+<!-- PERSONAL NUTRITION PLAN -->
+<section id="personalNutritionPlan">
+  <h2>🥗 Personal Nutrition Plan</h2>
+  <p>Enter your details to generate your personalised nutrition plan.</p>
+
+  <form id="nutritionForm">
+    <label>Age:</label>
+    <input type="number" id="age" min="1" max="120" required
+           placeholder="Enter your age">
+
+    <label>Weight (kg):</label>
+    <input type="number" id="weight" min="1" max="350" step="0.1"
+           required placeholder="Enter your weight">
+
+    <label>Height (cm):</label>
+    <input type="number" id="height" min="30" max="250" step="0.1"
+           required placeholder="Enter your height">
+
+    <label>Food Allergies:</label>
+    <input type="text" id="allergies" required
+           placeholder="Example: peanuts, milk, eggs, or None">
+
+    <label>Food Preference:</label>
+    <select id="diet">
+      <option value="vegetarian">Vegetarian</option>
+      <option value="vegan">Vegan</option>
+      <option value="nonvegetarian">Non-vegetarian</option>
+    </select>
+
+    <label>Favourite Foods:</label>
+    <input type="text" id="likes"
+           placeholder="Example: poha, rice, dal">
+
+    <label>Foods You Dislike:</label>
+    <input type="text" id="dislikes"
+           placeholder="Example: mushrooms, bitter gourd">
+
+    <label>Ingredients or Crops to Avoid:</label>
+    <input type="text" id="crops"
+           placeholder="Example: groundnuts, soybeans, wheat">
+
+    <label>Nutrition Goal:</label>
+    <select id="goal">
+      <option value="balanced">Balanced Nutrition</option>
+      <option value="muscle">Muscle Gain Support</option>
+      <option value="weight">Weight Management</option>
+    </select>
+
+    <button type="submit">Generate My Nutrition Plan</button>
+  </form>
+
+  <div id="nutritionResult" aria-live="polite"></div>
+</section>
 
 <style>
-:root {
-  --green: #087653;
-  --light: #eaf8f0;
-  --ink: #18352b;
-  --muted: #64776d;
-  --line: #d9e9df;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
+#personalNutritionPlan {
+  max-width: 750px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px #00000015;
   font-family: Arial, sans-serif;
-  background: #f5faf7;
-  color: var(--ink);
 }
 
-button, input, select { font: inherit; }
-button { cursor: pointer; }
-
-.layout { display: flex; min-height: 100vh; }
-
-aside {
-  width: 245px;
-  background: white;
-  border-right: 1px solid var(--line);
-  padding: 22px 14px;
-  position: fixed;
-  inset: 0 auto 0 0;
-  overflow-y: auto;
+#personalNutritionPlan h2 {
+  color: #16834a;
 }
 
-.logo {
-  font-size: 25px;
-  font-weight: 800;
-  color: var(--green);
-  margin: 5px 8px;
-}
-
-.tag {
-  font-size: 12px;
-  color: var(--muted);
-  margin: 0 8px 25px;
-}
-
-.menu-label {
-  font-size: 11px;
-  color: #81948a;
-  margin: 22px 10px 8px;
-}
-
-nav button {
+#personalNutritionPlan label {
   display: block;
-  width: 100%;
-  border: 0;
-  background: transparent;
-  padding: 13px 11px;
-  text-align: left;
-  border-radius: 9px;
-  color: #315044;
-  margin: 3px 0;
-}
-
-nav button:hover,
-nav button.active {
-  background: var(--light);
-  color: var(--green);
+  margin-top: 12px;
   font-weight: bold;
 }
 
-main {
-  margin-left: 245px;
-  padding: 24px;
-  width: calc(100% - 245px);
-  max-width: 1600px;
-}
-
-.hero {
-  background: linear-gradient(110deg, #e2f7e9, #f8fffa);
-  padding: 28px;
-  border-radius: 16px;
-  margin-bottom: 22px;
-}
-
-.hero h1 {
-  margin: 0 0 9px;
-  font-size: clamp(24px, 3vw, 34px);
-  color: var(--green);
-}
-
-.hero p { margin: 0; color: #597469; }
-
-.page { display: none; }
-.page.active { display: block; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 15px;
-}
-
-.card {
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  padding: 18px;
-  min-width: 0;
-}
-
-.card h2, .card h3 { margin: 0 0 10px; }
-.card h2 { font-size: 21px; }
-.card h3 { font-size: 17px; }
-
-.muted {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-.btn {
-  border: 0;
-  background: var(--green);
-  color: white;
-  border-radius: 8px;
-  padding: 11px 15px;
-  margin: 5px 4px 5px 0;
-}
-
-.btn.secondary {
-  background: #e6f5eb;
-  color: var(--green);
-}
-
-.btn.blue { background: #267bc1; }
-.btn.orange { background: #e78c36; }
-
-label {
-  display: block;
-  font-size: 13px;
-  margin: 10px 0 5px;
-}
-
-input, select {
+#personalNutritionPlan input,
+#personalNutritionPlan select {
+  box-sizing: border-box;
   width: 100%;
   padding: 11px;
-  border: 1px solid #cbdcd1;
+  margin-top: 5px;
+  border: 1px solid #cccccc;
   border-radius: 8px;
-  background: white;
-  color: var(--ink);
 }
 
-.formgrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+#personalNutritionPlan button {
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: #16834a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.metric {
+#nutritionResult .meal {
   background: #f0faf3;
-  padding: 13px;
-  border-radius: 10px;
-  border: 1px solid #e1f0e5;
-}
-
-.metric strong {
-  display: block;
-  font-size: 22px;
-  color: var(--green);
-  margin: 7px 0;
-}
-
-.metric small { color: var(--muted); }
-
-.progress {
-  height: 9px;
-  background: #e8eee9;
-  border-radius: 20px;
-  overflow: hidden;
-  margin: 10px 0;
-}
-
-.progress span {
-  display: block;
-  height: 100%;
-  background: #21a56d;
-  width: 0;
-}
-
-.foodgrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.food {
-  border: 1px solid var(--line);
-  padding: 14px;
-  border-radius: 12px;
-  background: white;
-}
-
-.food .emoji { font-size: 30px; }
-.food h3 { margin: 8px 0 5px; font-size: 16px; }
-
-.notice {
-  background: #fff6dc;
-  border: 1px solid #f0e1ac;
-  border-radius: 10px;
   padding: 12px;
-  font-size: 13px;
-  line-height: 1.6;
-  margin-top: 14px;
+  margin-top: 12px;
+  border-left: 4px solid #16834a;
+  border-radius: 6px;
 }
 
-.success {
-  background: #eaf8f0;
+#nutritionResult .warning {
+  background: #fff5d9;
   padding: 12px;
-  border-radius: 9px;
-  margin-top: 10px;
-}
-
-ul, ol { padding-left: 22px; line-height: 1.8; }
-
-footer {
-  margin-top: 28px;
-  color: var(--muted);
-  font-size: 12px;
-  text-align: center;
-}
-
-@media(max-width:950px) {
-  aside { width: 190px; }
-  main {
-    margin-left: 190px;
-    width: calc(100% - 190px);
-    padding: 15px;
-  }
-  .grid, .foodgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media(max-width:620px) {
-  .layout { display: block; }
-  aside {
-    position: static;
-    width: 100%;
-    padding: 12px;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .logo { font-size: 22px; }
-  nav { display: flex; overflow-x: auto; gap: 4px; }
-  nav button {
-    white-space: nowrap;
-    width: auto;
-    flex-shrink: 0;
-    padding: 10px;
-  }
-  .menu-label, .tag { display: none; }
-  main { margin: 0; width: 100%; padding: 13px; }
-  .grid, .foodgrid { grid-template-columns: 1fr; }
-  .hero { padding: 20px; }
-  .formgrid { grid-template-columns: 1fr 1fr; }
-  .card { padding: 14px; }
+  margin-top: 12px;
+  border-radius: 8px;
 }
 </style>
-</head>
-
-<body>
-<div class="layout">
-
-<aside>
-  <div class="logo">🌿 NutriAware</div>
-  <div class="tag">Eat Smart. Live Healthy.</div>
-  <div class="menu-label">MAIN MENU</div>
-
-  <nav id="nav">
-    <button class="active" data-page="dashboard">🏠 Dashboard</button>
-    <button data-page="plan">👤 Personal Nutrition Plan</button>
-    <button data-page="preferences">🥗 Food Preferences & Allergies</button>
-    <button data-page="nutribot">🤖 NutriBot</button>
-    <button data-page="thali">🍱 Build My Thali</button>
-    <button data-page="swaps">🔄 Healthy Food Swaps</button>
-    <button data-page="recipes">🍲 Healthy Recipes</button>
-    <button data-page="lookup">🔎 Food Lookup</button>
-    <button data-page="quiz">📝 Nutrition Quiz</button>
-    <button data-page="water">💧 Water Tracker</button>
-    <button data-page="analytics">📊 Nutrition Analytics</button>
-    <button data-page="about">ℹ️ About NutriAware</button>
-  </nav>
-</aside>
-
-<main>
-<header class="hero">
-  <h1 id="welcome">Welcome to NutriAware! 🌱</h1>
-  <p>Learn. Plan. Eat. Live Healthy.</p>
-</header>
-
-<section class="page active" id="dashboard">
-  <div class="grid">
-    <div class="card">
-      <h3>👤 Personal Nutrition Plan</h3>
-      <p class="muted">Get approximate nutrition goals based on your details.</p>
-      <button class="btn" onclick="showPage('plan')">Create My Plan</button>
-    </div>
-
-    <div class="card">
-      <h3>🥗 Food Preferences & Allergies</h3>
-      <p class="muted">Add foods you like, dislike, or need to avoid.</p>
-      <button class="btn" onclick="showPage('preferences')">Set Preferences</button>
-    </div>
-
-    <div class="card">
-      <h3>🤖 NutriBot</h3>
-      <p class="muted">Ask general nutrition questions.</p>
-      <button class="btn blue" onclick="showPage('nutribot')">Chat Now</button>
-    </div>
-
-    <div class="card">
-      <h3>🍱 Build My Thali</h3>
-      <p class="muted">Create a balanced meal idea.</p>
-      <button class="btn" onclick="showPage('thali')">Build Thali</button>
-    </div>
-
-    <div class="card">
-      <h3>🔄 Healthy Food Swaps</h3>
-      <p class="muted">Discover healthier alternatives.</p>
-      <button class="btn blue" onclick="showPage('swaps')">Explore Swaps</button>
-    </div>
-
-    <div class="card">
-      <h3>🍲 Healthy Recipes</h3>
-      <p class="muted">Find easy recipe ideas.</p>
-      <button class="btn orange" onclick="showPage('recipes')">View Recipes</button>
-    </div>
-
-    <div class="card">
-      <h3>🔎 Food Lookup</h3>
-      <p class="muted">Search sample nutrition information.</p>
-      <button class="btn" onclick="showPage('lookup')">Search Food</button>
-    </div>
-
-    <div class="card">
-      <h3>📊 Nutrition Analytics</h3>
-      <p class="muted">Review your profile and recorded data.</p>
-      <button class="btn" onclick="showPage('analytics')">View Analytics</button>
-    </div>
-  </div>
-</section>
-
-<section class="page" id="plan">
-  <div class="card">
-    <h2>👤 Personal Nutrition Plan</h2>
-    <p class="muted">Enter your details for approximate nutrition guidance.</p>
-
-    <div class="formgrid">
-      <div>
-        <label for="age">Age (years)</label>
-        <input id="age" type="number" min="1" max="120" placeholder="e.g. 18">
-      </div>
-      <div>
-        <label for="weight">Weight (kg)</label>
-        <input id="weight" type="number" min="1" max="400" step=".1" placeholder="e.g. 60">
-      </div>
-      <div>
-        <label for="height">Height (cm)</label>
-        <input id="height" type="number" min="30" max="250" placeholder="e.g. 170">
-      </div>
-      <div>
-        <label for="activity">Activity level</label>
-        <select id="activity">
-          <option value="1.2">Low / mostly sitting</option>
-          <option value="1.375">Lightly active</option>
-          <option value="1.55" selected>Moderately active</option>
-          <option value="1.725">Very active</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="btn" onclick="makePlan()">Calculate My Plan</button>
-    <div id="planResult" class="success" style="display:none"></div>
-
-    <div class="notice">
-      Educational estimates only. Nutrition needs vary by age, health and individual circumstances.
-      Users under 18 should obtain age-specific guidance from a qualified healthcare professional
-      or dietitian.
-    </div>
-  </div>
-
-  <div id="goalsCards" class="grid" style="margin-top:15px"></div>
-</section>
-
-<section class="page" id="preferences">
-  <div class="card">
-    <h2>🥗 My Food Preferences & Allergies</h2>
-    <p class="muted">Add your likes, dislikes, allergies and crops or ingredients you need to avoid.</p>
-
-    <div class="notice">
-      <b>Allergy safety:</b> Allergies are different from dislikes and intolerances.
-      The website can flag some ingredient matches but cannot guarantee that food is safe.
-      Always check full ingredient labels and cross-contact information.
-    </div>
-
-    <div class="formgrid">
-      <div>
-        <label for="likesInput">❤️ Foods I like</label>
-        <input id="likesInput" placeholder="e.g. rice, dal, apples">
-      </div>
-      <div>
-        <label for="dislikesInput">👎 Foods I dislike</label>
-        <input id="dislikesInput" placeholder="e.g. mushrooms, bitter gourd">
-      </div>
-      <div>
-        <label for="allergiesInput">⚠️ Food allergies</label>
-        <input id="allergiesInput" placeholder="e.g. peanuts, milk, sesame">
-      </div>
-      <div>
-        <label for="cropsInput">🌾 Crops / ingredients to avoid</label>
-        <input id="cropsInput" placeholder="e.g. wheat, soybean, maize">
-      </div>
-    </div>
-
-    <button class="btn" onclick="savePreferences()">Save Preferences</button>
-    <button class="btn secondary" onclick="clearPreferences()">Clear Preferences</button>
-    <div id="preferencesStatus" class="success" aria-live="polite"></div>
-  </div>
-
-  <div class="card" style="margin-top:14px">
-    <h2>🍽️ Personalised Meal Ideas</h2>
-    <p class="muted">Generate recipe suggestions based on your saved preferences and restrictions.</p>
-    <button class="btn" onclick="generatePersonalDiet()">Generate Diet Ideas</button>
-    <div id="personalDietResult" style="margin-top:12px"></div>
-  </div>
-</section>
-
-<section class="page" id="nutribot">
-  <div class="card">
-    <h2>🤖 NutriBot — Nutrition Assistant</h2>
-    <p class="muted">
-      This demo uses built-in rules. A real AI model requires a securely configured backend API.
-    </p>
-
-    <div id="chatLog" style="min-height:160px;max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:12px;margin:12px 0" aria-live="polite">
-      <p><b>NutriBot:</b> Hello! Ask me about balanced meals, recipes or general nutrition.</p>
-    </div>
-
-    <label for="chatInput">Your question</label>
-    <input id="chatInput" placeholder="e.g. Suggest breakfast without peanuts"
-      onkeydown="if(event.key==='Enter')sendNutriBot()">
-
-    <button class="btn" onclick="sendNutriBot()">Send Message</button>
-    <button class="btn secondary" onclick="clearNutriBot()">Clear Chat</button>
-
-    <div class="notice">
-      NutriBot is not a medical professional. It cannot verify that food is allergy-safe.
-      If a severe allergic reaction occurs, seek emergency medical help.
-    </div>
-  </div>
-</section>
-
-<section class="page" id="thali">
-  <div class="card">
-    <h2>🍱 Build My Thali</h2>
-    <p class="muted">Select foods to create a meal idea.</p>
-
-    <div class="formgrid">
-      <div>
-        <label for="grain">Grain</label>
-        <select id="grain">
-          <option>Whole-wheat roti</option>
-          <option>Brown rice</option>
-          <option>Millets / jowar bhakri</option>
-          <option>Oats</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="proteinFood">Protein food</label>
-        <select id="proteinFood">
-          <option>Dal</option>
-          <option>Chana / chickpeas</option>
-          <option>Rajma</option>
-          <option>Tofu</option>
-          <option>Eggs</option>
-          <option>Curd</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="vegetable">Vegetable</label>
-        <select id="vegetable">
-          <option>Mixed vegetables</option>
-          <option>Spinach</option>
-          <option>Carrot and cucumber</option>
-          <option>Bhindi</option>
-          <option>Cauliflower</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="fruit">Fruit</label>
-        <select id="fruit">
-          <option>Apple</option>
-          <option>Banana</option>
-          <option>Orange</option>
-          <option>Guava</option>
-          <option>Papaya</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="btn" onclick="buildThali()">Create My Thali</button>
-    <div id="thaliResult" class="success">Your selected meal will appear here.</div>
-  </div>
-</section>
-
-<section class="page" id="swaps">
-  <div class="card">
-    <h2>🔄 Healthy Food Swaps</h2>
-    <label for="swapSearch">Search food swaps</label>
-    <input id="swapSearch" placeholder="Search chips, drinks, rice..." oninput="renderSwaps()">
-  </div>
-  <div id="swapList" class="foodgrid" style="margin-top:14px"></div>
-</section>
-
-<section class="page" id="recipes">
-  <div class="card">
-    <h2>🍲 Healthy Recipes</h2>
-    <label for="recipeSearch">Search recipes</label>
-    <input id="recipeSearch" placeholder="Search poha, dal, oats..." oninput="renderRecipes()">
-  </div>
-  <div id="recipeList" class="foodgrid" style="margin-top:14px"></div>
-</section>
-
-<section class="page" id="lookup">
-  <div class="card">
-    <h2>🔎 Food Lookup</h2>
-    <p class="muted">Values are illustrative estimates, not a verified nutrition database.</p>
-    <label for="foodSearch">Food name</label>
-    <input id="foodSearch" placeholder="Try banana, oats, dal..." oninput="renderFoods()">
-  </div>
-  <div id="foodList" class="foodgrid" style="margin-top:14px"></div>
-</section>
-
-<section class="page" id="quiz">
-  <div class="card">
-    <h2>📝 Nutrition Quiz</h2>
-    <form id="quizForm">
-      <div id="quizQuestions"></div>
-      <button class="btn" type="submit">Submit Quiz</button>
-    </form>
-    <div id="quizResult" class="success" style="display:none"></div>
-  </div>
-</section>
-
-<section class="page" id="water">
-  <div class="card">
-    <h2>💧 Water Tracker</h2>
-    <p class="muted">One glass is assumed to be approximately 250 ml.</p>
-
-    <div class="metric">
-      <span>Glasses recorded today</span>
-      <strong id="waterCount">0</strong>
-      <small id="waterMl">0 ml recorded</small>
-    </div>
-
-    <div class="progress"><span id="waterBar"></span></div>
-    <button class="btn" onclick="changeWater(1)">+ Add a glass</button>
-    <button class="btn secondary" onclick="changeWater(-1)">− Remove a glass</button>
-    <button class="btn secondary" onclick="resetWater()">Reset count</button>
-  </div>
-</section>
-
-<section class="page" id="analytics">
-  <div class="card">
-    <h2>📊 Nutrition Analytics</h2>
-    <p class="muted">Review your profile, nutrition goals and recorded activities.</p>
-    <button class="btn" onclick="updateAnalytics()">Refresh Analytics</button>
-  </div>
-
-  <div id="analyticsProfile" class="grid" style="margin-top:14px"></div>
-
-  <div class="card" style="margin-top:14px">
-    <h3>Daily Nutrition Goals</h3>
-    <div id="analyticsGoals"></div>
-  </div>
-
-  <div class="grid" style="margin-top:14px">
-    <div class="card">
-      <h3>💧 Water Tracker</h3>
-      <div class="metric"><strong id="analyticsWater">0</strong><small>glasses recorded</small></div>
-    </div>
-
-    <div class="card">
-      <h3>📝 Quiz Result</h3>
-      <div class="metric"><strong id="analyticsQuiz">Not taken</strong><small>latest quiz score</small></div>
-    </div>
-
-    <div class="card">
-      <h3>🍱 Meal Builder</h3>
-      <div id="analyticsThali" class="muted">No meal created yet.</div>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:14px">
-    <h3>🥗 Food Preferences & Restrictions</h3>
-    <div id="analyticsPreferences" class="muted"></div>
-  </div>
-
-  <div class="card" style="margin-top:14px">
-    <h3>📋 Activity Summary</h3>
-    <div id="activityLog" class="muted">No activity recorded yet.</div>
-  </div>
-</section>
-
-<section class="page" id="about">
-  <div class="card">
-    <h2>🌿 About NutriAware</h2>
-    <p>NutriAware promotes nutrition awareness and healthier food choices.</p>
-    <h3>Our objectives</h3>
-    <ul>
-      <li>Promote awareness of balanced nutrition.</li>
-      <li>Encourage healthier food swaps.</li>
-      <li>Provide easy recipe ideas.</li>
-      <li>Support food preference tracking.</li>
-      <li>Help users learn about nutrition.</li>
-    </ul>
-    <p class="muted">This is an educational project, not a replacement for professional medical advice.</p>
-  </div>
-</section>
-
-<footer>NutriAware · Eat Smart. Live Healthy.</footer>
-</main>
-</div>
 
 <script>
-const swaps = [
-["🥤","Sugary soft drinks","Water or unsweetened drinks"],
-["🍟","Deep-fried chips","Roasted chickpeas or makhana"],
-["🍞","Refined white bread","Whole-wheat bread"],
-["🍚","Only white rice","Try brown rice or millets sometimes"],
-["🍜","Instant noodles often","Vegetable-rich homemade noodles"],
-["🍪","Cookies every day","Fruit or plain yogurt"],
-["🍬","Frequent sweets","Fresh fruit"],
-["🧂","Very salty snacks","Unsalted nuts or seeds"],
-["🥣","Sugary breakfast cereal","Oats with fruit"],
-["🧃","Packaged sweet juice","Whole fruit and water"],
-["🍨","Ice cream frequently","Plain yogurt with fruit"],
-["🥓","Processed meat often","Beans, lentils, eggs or tofu"],
-["🍕","Takeaway pizza often","Homemade vegetable-topped pizza"],
-["🥔","Fried potato wedges","Baked potato wedges"],
-["🍝","Plain pasta only","Whole-wheat pasta with vegetables"],
-["🥗","Few vegetables at meals","Add vegetables or salad"]
-];
+document.getElementById("nutritionForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-const recipes = [
-["🥣","Vegetable Poha","Flattened rice, peas, onion, carrot, spices","Cook the vegetables, mix in rinsed poha and steam until soft."],
-["🫘","Chana Salad","Cooked chickpeas, tomato, cucumber, lemon","Mix ingredients and season with lemon."],
-["🥞","Moong Dal Chilla","Soaked moong dal, ginger, spices","Blend soaked dal and cook the batter on a pan."],
-["🥣","Oats Porridge","Oats, milk or suitable alternative, fruit","Simmer oats and top with fruit."],
-["🥗","Sprout Chaat","Sprouts, tomato, onion, lemon","Combine ingredients and season."],
-["🍲","Dal Vegetable Soup","Dal, vegetables, spices","Cook until tender and season."],
-["🥪","Vegetable Sandwich","Whole-wheat bread, cucumber, tomato","Layer vegetables between bread."],
-["🍛","Rajma Bowl","Rajma, rice, tomato, spices","Prepare rajma curry and serve with rice."],
-["🥗","Fruit Yogurt Bowl","Plain yogurt, seasonal fruit","Add chopped fruit to yogurt."],
-["🫓","Besan Chilla","Besan, onion, tomato, spices","Make a batter and cook on a lightly oiled pan."],
-["🍲","Vegetable Dalia","Broken wheat, vegetables, spices","Cook together until tender."],
-["🥬","Palak Dal","Dal, spinach, garlic, spices","Cook dal and stir in cooked spinach."],
-["🍚","Vegetable Khichdi","Rice, dal, vegetables","Cook together until soft."],
-["🥒","Cucumber Raita","Yogurt, cucumber, cumin","Mix cucumber with yogurt and seasoning."],
-["🍳","Vegetable Omelette","Eggs, onion, tomato, spinach","Mix and cook eggs thoroughly."],
-["🌯","Bean Wrap","Whole-wheat roti, beans, vegetables","Fill roti with beans and vegetables."],
-["🍠","Roasted Sweet Potato","Sweet potato, spices","Season and bake until tender."]
-];
+  const age = Number(document.getElementById("age").value);
+  const weight = Number(document.getElementById("weight").value);
+  const height = Number(document.getElementById("height").value);
+  const allergies = document.getElementById("allergies").value
+    .toLowerCase().split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
+  const diet = document.getElementById("diet").value;
+  const likes = document.getElementById("likes").value;
+  const dislikes = document.getElementById("dislikes").value;
+  const crops = document.getElementById("crops").value;
+  const goal = document.getElementById("goal").value;
 
-const foods = [
-["Banana","🍌",105,1.3,27,3.1],
-["Apple","🍎",95,0.5,25,4.4],
-["Oats, cooked cup","🥣",154,6,27,4],
-["Cooked lentils, cup","🫘",230,18,40,15.6],
-["Cooked rice, cup","🍚",205,4.3,45,0.6],
-["Whole-wheat roti, medium","🫓",110,3.5,20,3],
-["Boiled egg","🥚",78,6.3,0.6,0],
-["Plain yogurt, 170 g","🥛",100,9,6,0],
-["Cooked chickpeas, cup","🫘",269,14.5,45,12.5],
-["Almonds, 28 g","🥜",164,6,6,3.5],
-["Milk, cup","🥛",122,8,12,0],
-["Cooked potato, medium","🥔",160,4,37,3.8],
-["Carrot, cup","🥕",52,1.2,12,3.6],
-["Cooked spinach, cup","🥬",41,5.3,7,4.3],
-["Tofu, 100 g","🧊",144,17,3,2],
-["Orange","🍊",62,1.2,15,3.1],
-["Peanuts, 28 g","🥜",166,7,6,2.4],
-["Paneer, 100 g","🧀",265,18,3,0],
-["Cooked broccoli, cup","🥦",55,3.7,11,5.1],
-["Cooked dal, cup","🍲",180,12,30,8],
-["Cooked sweet corn, cup","🌽",143,5,31,3.6]
-];
-
-const quiz = [
-{q:"Which food is a source of dietary fibre?",a:["Lentils","Sugar syrup","Soft drink"],correct:0},
-{q:"Which is a good everyday drink for hydration?",a:["Water","Energy drink","Sugary soda"],correct:0},
-{q:"Which meal pattern supports variety?",a:["Only one food group","A variety of food groups","Only supplements"],correct:1},
-{q:"Which is a healthier snack choice?",a:["Fruit and unsalted nuts","Only candy","Extra salty chips"],correct:0},
-{q:"Why is protein important?",a:["It supports growth and tissue repair","It replaces all nutrients","It removes the need for sleep"],correct:0}
-];
-
-let profile = null;
-let water = 0;
-let quizScore = null;
-let thali = null;
-let activities = [];
-
-const PREF_KEY = "nutriaware_food_preferences_v1";
-
-let preferences = {
-  likes: [],
-  dislikes: [],
-  allergies: [],
-  crops: []
-};
-
-function parseList(value) {
-  return [...new Set(value.split(",")
-    .map(x => x.trim().toLowerCase())
-    .filter(Boolean))];
-}
-
-function loadPreferences() {
-  try {
-    preferences = JSON.parse(localStorage.getItem(PREF_KEY)) || preferences;
-  } catch (e) {}
-
-  document.getElementById("likesInput").value = preferences.likes.join(", ");
-  document.getElementById("dislikesInput").value = preferences.dislikes.join(", ");
-  document.getElementById("allergiesInput").value = preferences.allergies.join(", ");
-  document.getElementById("cropsInput").value = preferences.crops.join(", ");
-
-  renderPreferenceStatus();
-}
-
-function savePreferences() {
-  preferences = {
-    likes: parseList(document.getElementById("likesInput").value),
-    dislikes: parseList(document.getElementById("dislikesInput").value),
-    allergies: parseList(document.getElementById("allergiesInput").value),
-    crops: parseList(document.getElementById("cropsInput").value)
-  };
-
-  try {
-    localStorage.setItem(PREF_KEY, JSON.stringify(preferences));
-  } catch (e) {
-    alert("Browser storage is unavailable. Preferences may not be saved.");
+  if (age < 1 || age > 120 || weight <= 0 ||
+      weight > 350 || height < 30 || height > 250) {
+    document.getElementById("nutritionResult").innerHTML =
+      "<p>Please enter valid age, weight, and height.</p>";
+    return;
   }
 
-  renderPreferenceStatus();
-  logActivity("Food preferences saved");
-  alert("Preferences saved on this device.");
-}
+  const restrictions = [...allergies, dislikes, crops]
+    .filter(x => x && x !== "none" && x !== "no allergies")
+    .join(" ");
 
-function clearPreferences() {
-  if (!confirm("Clear your saved food preferences and restrictions?")) return;
-
-  preferences = {likes: [], dislikes: [], allergies: [], crops: []};
-
-  try {
-    localStorage.removeItem(PREF_KEY);
-  } catch (e) {}
-
-  loadPreferences();
-  document.getElementById("personalDietResult").innerHTML = "";
-  logActivity("Food preferences cleared");
-}
-
-function renderPreferenceStatus() {
-  const el = document.getElementById("preferencesStatus");
-  if (!el) return;
-
-  el.innerHTML = `
-    <b>Saved preferences</b>
-    <p>❤️ Likes: ${preferences.likes.join(", ") || "Not added"}</p>
-    <p>👎 Dislikes: ${preferences.dislikes.join(", ") || "Not added"}</p>
-    <p>⚠️ Allergies: ${preferences.allergies.join(", ") || "Not added"}</p>
-    <p>🌾 Crops / ingredients to avoid: ${preferences.crops.join(", ") || "Not added"}</p>
-  `;
-}
-
-function ingredientConflict(recipe) {
-  const text = (recipe[1] + " " + recipe[2]).toLowerCase();
-  const restrictions = [...preferences.allergies, ...preferences.crops];
-
-  const aliases = {
-    peanut: ["peanut", "groundnut", "arachis"],
-    peanuts: ["peanut", "groundnut", "arachis"],
-    milk: ["milk", "yogurt", "yoghurt", "curd", "paneer", "cheese", "dairy"],
-    dairy: ["milk", "yogurt", "yoghurt", "curd", "paneer", "cheese", "dairy"],
-    wheat: ["wheat", "roti", "dalia", "broken wheat", "whole-wheat", "bread"],
-    soybean: ["soy", "soya", "soybean", "tofu"],
-    soy: ["soy", "soya", "soybean", "tofu"],
-    sesame: ["sesame", "til"],
-    egg: ["egg", "eggs"],
-    eggs: ["egg", "eggs"],
-    maize: ["maize", "corn"],
-    corn: ["maize", "corn"]
-  };
-
-  for (const restriction of restrictions) {
-    const terms = aliases[restriction] || [restriction];
-
-    if (terms.some(term => text.includes(term))) {
-      return restriction;
+  const meals = [
+    {
+      name: "Vegetable Poha",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "rice flakes, onion, potato, vegetables, peanuts"
+    },
+    {
+      name: "Oats with Banana",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "oats, banana, milk"
+    },
+    {
+      name: "Idli and Sambar",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "rice, urad dal, lentils, vegetables"
+    },
+    {
+      name: "Roti, Dal and Vegetables",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "wheat, atta, lentils, vegetables"
+    },
+    {
+      name: "Rice and Rajma",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "rice, kidney beans, tomato"
+    },
+    {
+      name: "Paneer with Roti",
+      diet: ["vegetarian"],
+      ingredients: "paneer, milk, wheat, tomato"
+    },
+    {
+      name: "Tofu and Vegetable Rice",
+      diet: ["vegetarian", "vegan"],
+      ingredients: "tofu, soybeans, rice, vegetables"
+    },
+    {
+      name: "Boiled Eggs and Rice",
+      diet: ["nonvegetarian"],
+      ingredients: "eggs, rice, vegetables"
+    },
+    {
+      name: "Chicken with Rice",
+      diet: ["nonvegetarian"],
+      ingredients: "chicken, rice, vegetables"
+    },
+    {
+      name: "Fruit Bowl",
+      diet: ["vegetarian", "vegan", "nonvegetarian"],
+      ingredients: "apple, banana, papaya, orange"
     }
-  }
-
-  return null;
-}
-
-function generatePersonalDiet() {
-  if (
-    !preferences.allergies.length &&
-    !preferences.crops.length &&
-    !preferences.likes.length &&
-    !preferences.dislikes.length
-  ) {
-    document.getElementById("personalDietResult").innerHTML =
-      "<p class='notice'>Add preferences or restrictions first.</p>";
-    return;
-  }
-
-  const available = recipes.filter(recipe => !ingredientConflict(recipe));
-
-  const disliked = available.filter(recipe =>
-    preferences.dislikes.some(dislike =>
-      (recipe[1] + " " + recipe[2]).toLowerCase().includes(dislike)
-    )
-  );
-
-  const liked = available.filter(recipe =>
-    preferences.likes.some(like =>
-      (recipe[1] + " " + recipe[2]).toLowerCase().includes(like)
-    )
-  );
-
-  const chosen = [
-    ...liked,
-    ...available.filter(recipe =>
-      !liked.includes(recipe) &&
-      !preferences.dislikes.some(dislike =>
-        (recipe[1] + " " + recipe[2]).toLowerCase().includes(dislike)
-      )
-    )
-  ].slice(0, 6);
-
-  let html = `
-    <div class="notice">
-      <b>Important:</b> These suggestions use basic text matching only.
-      They cannot verify hidden ingredients, product labels or cross-contact.
-      Always check ingredients carefully, especially when you have a food allergy.
-    </div>
-  `;
-
-  if (!chosen.length) {
-    html += "<p>No suitable built-in recipes were identified. Do not remove an allergy restriction to obtain results. Ask a qualified dietitian for suitable alternatives.</p>";
-  } else {
-    html += '<div class="foodgrid">' + chosen.map(recipe => `
-      <div class="food">
-        <div class="emoji">${recipe[0]}</div>
-        <h3>${recipe[1]}</h3>
-        <p class="muted">${recipe[2]}</p>
-        <details>
-          <summary>Instructions</summary>
-          <p>${recipe[3]}</p>
-        </details>
-      </div>
-    `).join("") + "</div>";
-  }
-
-  if (disliked.length) {
-    html += `<p class="muted">Some ideas were excluded because they matched your dislikes.</p>`;
-  }
-
-  document.getElementById("personalDietResult").innerHTML = html;
-  logActivity("Personalised meal ideas generated");
-}
-
-function addChat(who, message) {
-  const log = document.getElementById("chatLog");
-  const p = document.createElement("p");
-  const b = document.createElement("b");
-
-  b.textContent = who + ": ";
-  p.appendChild(b);
-  p.appendChild(document.createTextNode(message));
-  log.appendChild(p);
-  log.scrollTop = log.scrollHeight;
-}
-
-function sendNutriBot() {
-  const input = document.getElementById("chatInput");
-  const question = input.value.trim();
-
-  if (!question) return;
-
-  addChat("You", question);
-  input.value = "";
-
-  const lower = question.toLowerCase();
-  let answer;
-
-  if (/allerg|anaphyl|reaction|swelling|breath/.test(lower)) {
-    answer = "I cannot verify that food is safe. Avoid known allergens, check full ingredient labels and cross-contact information, and consult a healthcare professional. Trouble breathing or throat/tongue swelling after exposure requires emergency help.";
-  } else if (/diet|meal|breakfast|lunch|dinner|recipe|food/.test(lower)) {
-    const suggestions = recipes.filter(recipe =>
-      !ingredientConflict(recipe) &&
-      !preferences.dislikes.some(dislike =>
-        (recipe[1] + " " + recipe[2]).toLowerCase().includes(dislike)
-      )
-    ).slice(0, 3);
-
-    answer = suggestions.length
-      ? "Possible recipe ideas to review: " + suggestions.map(recipe => recipe[1]).join(", ") + ". Check all ingredients and labels before eating. This filter cannot guarantee allergy safety."
-      : "I could not identify a suitable built-in recipe. Keep allergy restrictions in place and ask a qualified dietitian for alternatives.";
-  } else if (/like|dislike|preference/.test(lower)) {
-    answer = "Save your likes, dislikes and restrictions in My Food Preferences & Allergies. I use them to filter built-in meal ideas.";
-  } else if (/protein|fiber|fibre|carb|nutrition/.test(lower)) {
-    answer = "Aim for a variety of grains, protein foods, vegetables and fruits. Individual needs vary. Use the Personal Nutrition Plan as an educational estimate, not a medical prescription.";
-  } else {
-    answer = "I can answer basic questions about balanced meals, recipes and food preferences. Try asking: Suggest a breakfast, or How can I eat more fibre? This demo does not connect to a live AI model yet.";
-  }
-
-  addChat("NutriBot", answer);
-  logActivity("NutriBot used");
-}
-
-function clearNutriBot() {
-  document.getElementById("chatLog").innerHTML = "";
-  addChat("NutriBot", "Chat cleared. Ask a general nutrition question.");
-}
-
-function logActivity(message) {
-  activities.unshift(new Date().toLocaleTimeString() + ": " + message);
-  activities = activities.slice(0, 12);
-  updateAnalytics();
-}
-
-function showPage(id) {
-  document.querySelectorAll(".page").forEach(page =>
-    page.classList.toggle("active", page.id === id)
-  );
-
-  document.querySelectorAll("#nav button").forEach(button =>
-    button.classList.toggle("active", button.dataset.page === id)
-  );
-
-  const titles = {
-    dashboard: "Welcome to NutriAware! 🌱",
-    plan: "Your Personal Nutrition Plan",
-    thali: "Build Your Balanced Thali",
-    swaps: "Healthy Food Swaps",
-    recipes: "Healthy Recipes",
-    lookup: "Food Lookup",
-    quiz: "Nutrition Quiz",
-    water: "Water Tracker",
-    analytics: "Nutrition Analytics",
-    preferences: "My Food Preferences & Allergies",
-    nutribot: "NutriBot Nutrition Assistant",
-    about: "About NutriAware"
-  };
-
-  document.getElementById("welcome").textContent = titles[id] || "NutriAware";
-
-  if (id === "analytics") updateAnalytics();
-
-  window.scrollTo({top: 0, behavior: "smooth"});
-}
-
-document.querySelectorAll("#nav button").forEach(button => {
-  button.addEventListener("click", () => showPage(button.dataset.page));
-});
-
-function makePlan() {
-  const age = +document.getElementById("age").value;
-  const weight = +document.getElementById("weight").value;
-  const height = +document.getElementById("height").value;
-  const activity = +document.getElementById("activity").value;
-
-  if (
-    !age || !weight || !height ||
-    age < 1 || age > 120 ||
-    weight < 1 || weight > 400 ||
-    height < 30 || height > 250
-  ) {
-    alert("Please enter valid age, weight and height.");
-    return;
-  }
-
-  const bmi = weight / ((height / 100) ** 2);
-  const adult = age >= 18;
-
-  const kcal = adult
-    ? Math.round((10 * weight + 6.25 * height - 5 * age + 5) * activity)
-    : null;
-
-  const protein = adult ? Math.round(weight * 0.8) : null;
-  const carbs = adult
-    ? Math.round(kcal * 0.45 / 4) + "–" + Math.round(kcal * 0.65 / 4)
-    : null;
-
-  const fibre = adult ? Math.round(kcal / 1000 * 14) : null;
-  const grains = adult
-    ? Math.round(kcal * 0.25 / 4) + "–" + Math.round(kcal * 0.35 / 4)
-    : null;
-
-  const vegetables = adult ? "300–400" : "Age-specific";
-
-  profile = {
-    age, weight, height, activity, adult,
-    bmi, kcal, protein, carbs, fibre, grains, vegetables
-  };
-
-  const result = document.getElementById("planResult");
-  result.style.display = "block";
-
-  result.innerHTML = adult
-    ? `<h3>Your estimated daily guide</h3>
-       <p>Age: ${age} years · Weight: ${weight} kg · Height: ${height} cm</p>
-       <p>Estimated energy: <b>${kcal} kcal/day</b></p>
-       <p>Adult BMI screening estimate: <b>${bmi.toFixed(1)}</b></p>
-       <p>These are general estimates, not a personalised medical prescription.</p>`
-    : `<h3>Age-specific guidance needed</h3>
-       <p>For users under 18, nutrition needs depend on growth and development.
-       Please consult a qualified healthcare professional or dietitian.</p>`;
-
-  document.getElementById("goalsCards").innerHTML = adult ? [
-    ["🥚", "Protein", protein + " g", "Approximate adult reference"],
-    ["🌾", "Grains", grains + " g", "Illustrative estimate"],
-    ["⚡", "Carbohydrates", carbs + " g", "Approximate energy-based range"],
-    ["🥦", "Vegetables", vegetables + " g", "General food-guide range"],
-    ["🫘", "Fibre", fibre + " g", "Approximate energy-based estimate"]
-  ].map(item => `
-    <div class="card">
-      <h3>${item[0]} ${item[1]}</h3>
-      <div class="metric">
-        <strong>${item[2]}</strong>
-        <small>${item[3]}</small>
-      </div>
-    </div>
-  `).join("") : `
-    <div class="card">
-      <h3>Age-specific nutrition goals</h3>
-      <p class="muted">Consult a qualified professional for suitable daily targets.</p>
-    </div>
-  `;
-
-  logActivity("Personal nutrition plan generated");
-}
-
-function buildThali() {
-  thali = {
-    grain: document.getElementById("grain").value,
-    protein: document.getElementById("proteinFood").value,
-    vegetable: document.getElementById("vegetable").value,
-    fruit: document.getElementById("fruit").value
-  };
-
-  document.getElementById("thaliResult").innerHTML = `
-    <h3>🍽️ Your selected thali</h3>
-    <p>🌾 Grain: <b>${thali.grain}</b></p>
-    <p>🫘 Protein food: <b>${thali.protein}</b></p>
-    <p>🥦 Vegetable: <b>${thali.vegetable}</b></p>
-    <p>🍎 Fruit: <b>${thali.fruit}</b></p>
-    <p class="muted">Check ingredients carefully if you have allergies.</p>
-  `;
-
-  logActivity("Thali created");
-}
-
-function renderSwaps() {
-  const query = (document.getElementById("swapSearch").value || "").toLowerCase();
-
-  document.getElementById("swapList").innerHTML = swaps
-    .filter(item => item.join(" ").toLowerCase().includes(query))
-    .map(item => `
-      <div class="food">
-        <div class="emoji">${item[0]}</div>
-        <p class="muted">Instead of</p>
-        <h3>${item[1]}</h3>
-        <p>Try: <b>${item[2]}</b></p>
-      </div>
-    `).join("") || "<div class='card'>No matching swaps found.</div>";
-}
-
-function renderRecipes() {
-  const query = (document.getElementById("recipeSearch").value || "").toLowerCase();
-
-  document.getElementById("recipeList").innerHTML = recipes
-    .filter(item => item.join(" ").toLowerCase().includes(query))
-    .map(item => `
-      <div class="food">
-        <div class="emoji">${item[0]}</div>
-        <h3>${item[1]}</h3>
-        <p class="muted"><b>Ingredients:</b> ${item[2]}</p>
-        <details>
-          <summary>View instructions</summary>
-          <p>${item[3]}</p>
-        </details>
-      </div>
-    `).join("") || "<div class='card'>No recipes found.</div>";
-}
-
-function renderFoods() {
-  const query = (document.getElementById("foodSearch").value || "").toLowerCase();
-
-  document.getElementById("foodList").innerHTML = foods
-    .filter(item => item[0].toLowerCase().includes(query))
-    .map(item => `
-      <div class="food">
-        <div class="emoji">${item[1]}</div>
-        <h3>${item[0]}</h3>
-        <p>Energy: <b>${item[2]} kcal</b></p>
-        <p>Protein: ${item[3]} g</p>
-        <p>Carbohydrates: ${item[4]} g</p>
-        <p>Fibre: ${item[5]} g</p>
-      </div>
-    `).join("") || "<div class='card'>No food found.</div>";
-}
-
-function renderQuiz() {
-  document.getElementById("quizQuestions").innerHTML = quiz.map((item, i) => `
-    <div class="card" style="margin:12px 0">
-      <b>${i + 1}. ${item.q}</b>
-      ${item.a.map((answer, j) => `
-        <label>
-          <input style="width:auto;margin-right:8px"
-            type="radio" name="q${i}" value="${j}" required>
-          ${answer}
-        </label>
-      `).join("")}
-    </div>
-  `).join("");
-}
-
-document.getElementById("quizForm").addEventListener("submit", event => {
-  event.preventDefault();
-
-  let score = 0;
-
-  quiz.forEach((item, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if (selected && +selected.value === item.correct) score++;
-  });
-
-  quizScore = score;
-
-  const result = document.getElementById("quizResult");
-  result.style.display = "block";
-  result.innerHTML = `
-    <h3>Your score: ${score} / ${quiz.length}</h3>
-    <p>${score >= 4 ? "Great work!" : "Good attempt! Review the questions and try again."}</p>
-  `;
-
-  logActivity("Nutrition quiz completed: " + score + "/" + quiz.length);
-});
-
-function changeWater(amount) {
-  water = Math.max(0, water + amount);
-
-  document.getElementById("waterCount").textContent = water;
-  document.getElementById("waterMl").textContent = (water * 250) + " ml recorded";
-  document.getElementById("waterBar").style.width = Math.min(100, water / 8 * 100) + "%";
-
-  logActivity("Water tracker updated");
-}
-
-function resetWater() {
-  water = 0;
-
-  document.getElementById("waterCount").textContent = "0";
-  document.getElementById("waterMl").textContent = "0 ml recorded";
-  document.getElementById("waterBar").style.width = "0%";
-
-  logActivity("Water count reset");
-}
-
-function updateAnalytics() {
-  const cards = profile ? [
-    ["Age", profile.age + " years"],
-    ["Weight", profile.weight + " kg"],
-    ["Height", profile.height + " cm"],
-    ["Activity", "Recorded"],
-    ["Estimated BMI", profile.adult ? profile.bmi.toFixed(1) : "Not shown"],
-    ["Estimated energy", profile.adult ? profile.kcal + " kcal/day" : "Professional guidance needed"]
-  ] : [
-    ["Profile", "No plan yet"],
-    ["Next step", "Enter your details in Personal Nutrition Plan"]
   ];
 
-  document.getElementById("analyticsProfile").innerHTML = cards.map(item => `
-    <div class="card">
-      <div class="muted">${item[0]}</div>
-      <h3>${item[1]}</h3>
-    </div>
-  `).join("");
+  // Basic ingredient matching only; it cannot guarantee allergy safety.
+  const aliases = {
+    peanuts: ["peanut", "groundnut", "moongphali"],
+    milk: ["milk", "dairy", "paneer", "cheese", "curd", "yogurt"],
+    eggs: ["egg"],
+    wheat: ["wheat", "atta", "maida"],
+    soybeans: ["soy", "soya", "tofu"],
+    rice: ["rice", "poha"],
+    nuts: ["almond", "cashew", "walnut"]
+  };
 
-  document.getElementById("analyticsGoals").innerHTML =
-    profile && profile.adult ? [
-      ["Protein", profile.protein + " g/day"],
-      ["Grains", profile.grains + " g/day (illustrative)"],
-      ["Carbohydrates", profile.carbs + " g/day"],
-      ["Vegetables", profile.vegetables + " g/day"],
-      ["Fibre", profile.fibre + " g/day"]
-    ].map(item => `
-      <div class="metric" style="margin:8px 0;display:flex;justify-content:space-between;gap:10px">
-        <span>${item[0]}</span>
-        <b>${item[1]}</b>
+  const blockedTerms = [];
+
+  Object.entries(aliases).forEach(([key, words]) => {
+    const userMentioned = words.some(word =>
+      restrictions.includes(word)
+    );
+
+    if (userMentioned) {
+      blockedTerms.push(...words);
+    }
+  });
+
+  const safeSuggestions = meals.filter(meal => {
+    if (!meal.diet.includes(diet)) return false;
+
+    const ingredients = meal.ingredients.toLowerCase();
+
+    return !blockedTerms.some(term => ingredients.includes(term));
+  });
+
+  // Avoid foods the user dislikes when the ingredient is identifiable.
+  const dislikedTerms = dislikes.toLowerCase()
+    .split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
+
+  const cropTerms = crops.toLowerCase()
+    .split(/[,;\n]+/).map(x => x.trim()).filter(Boolean);
+
+  const filteredMeals = safeSuggestions.filter(meal => {
+    const ingredients = meal.ingredients.toLowerCase();
+
+    return ![...dislikedTerms, ...cropTerms].some(term =>
+      term && ingredients.includes(term)
+    );
+  });
+
+  const selectedMeals = filteredMeals.length
+    ? filteredMeals
+    : [];
+
+  const escapeHTML = value => String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[c]);
+
+  let proteinText;
+
+  if (age < 18) {
+    proteinText =
+      "Your protein needs depend on growth and development. Ask a qualified healthcare professional for an age-appropriate target.";
+  } else {
+    let protein = Math.round(weight * 0.8);
+
+    if (goal === "muscle") {
+      protein = Math.round(weight * 1.2);
+    }
+
+    proteinText = "Rough adult protein reference: approximately " +
+      protein + " g/day. Individual needs vary.";
+  }
+
+  let mealHTML = "";
+
+  if (selectedMeals.length) {
+    mealHTML = selectedMeals.map((meal, index) => `
+      <div class="meal">
+        <strong>${escapeHTML(meal.name)}</strong>
+        <p>Ingredients: ${escapeHTML(meal.ingredients)}</p>
       </div>
-    `).join("") :
-    "<p class='muted'>Create a plan to see estimates. Users under 18 need age-specific professional guidance.</p>";
+    `).join("");
+  } else {
+    mealHTML = `
+      <div class="meal">
+        No matching meals were found for these preferences.
+        Try reviewing your restrictions and consult a nutrition professional.
+      </div>
+    `;
+  }
 
-  document.getElementById("analyticsPreferences").innerHTML = `
-    <p>❤️ Likes: ${preferences.likes.join(", ") || "Not added"}</p>
-    <p>👎 Dislikes: ${preferences.dislikes.join(", ") || "Not added"}</p>
-    <p>⚠️ Allergies: ${preferences.allergies.join(", ") || "Not added"}</p>
-    <p>🌾 Crops / ingredients to avoid: ${preferences.crops.join(", ") || "Not added"}</p>
+  const goalText = {
+    balanced: "Balanced Nutrition",
+    muscle: "Muscle Gain Support",
+    weight: "Weight Management"
+  }[goal];
+
+  document.getElementById("nutritionResult").innerHTML = `
+    <h2>🌱 Your Personal Nutrition Plan</h2>
+
+    <p><strong>Age:</strong> ${age} years</p>
+    <p><strong>Weight:</strong> ${weight} kg</p>
+    <p><strong>Height:</strong> ${height} cm</p>
+    <p><strong>Goal:</strong> ${goalText}</p>
+
+    <h3>💪 Protein Guidance</h3>
+    <p>${escapeHTML(proteinText)}</p>
+
+    <h3>🍽️ Suggested Foods</h3>
+    ${mealHTML}
+
+    <h3>🥦 Daily Nutrition Tips</h3>
+    <ul>
+      <li>Eat a variety of vegetables and fruits.</li>
+      <li>Include suitable whole grains and carbohydrate sources.</li>
+      <li>Choose protein foods that fit your dietary preference.</li>
+      <li>Include fibre-rich foods and drink water regularly.</li>
+      <li>Adjust portions to your age, activity, and individual needs.</li>
+    </ul>
+
+    <p><strong>Favourite foods:</strong>
+      ${escapeHTML(likes || "Not specified")}</p>
+
+    <div class="warning">
+      <strong>Allergy safety:</strong> This demo uses basic text matching.
+      It may miss hidden ingredients, alternate names, or cross-contact.
+      Always check food labels and preparation details. Do not rely on
+      this tool alone to determine whether food is safe for an allergy.
+    </div>
+
+    <p><small>
+      This is an educational demo, not a medical prescription.
+      Protein estimates are rough references and may not suit everyone.
+    </small></p>
   `;
 
-  document.getElementById("analyticsWater").textContent = water;
-  document.getElementById("analyticsQuiz").textContent =
-    quizScore === null ? "Not taken" : quizScore + "/5";
-
-  document.getElementById("analyticsThali").textContent = thali
-    ? `${thali.grain} + ${thali.protein} + ${thali.vegetable} + ${thali.fruit}`
-    : "No meal created yet.";
-
-  document.getElementById("activityLog").innerHTML = activities.length
-    ? activities.map(item => `<p>• ${item}</p>`).join("")
-    : "No activity recorded yet.";
-}
-
-renderSwaps();
-renderRecipes();
-renderFoods();
-renderQuiz();
-loadPreferences();
-updateAnalytics();
+  // Save the user's inputs in this browser.
+  try {
+    localStorage.setItem("nutriaware_personal_plan", JSON.stringify({
+      age, weight, height, allergies, diet, likes, dislikes, crops, goal
+    }));
+  } catch (error) {
+    console.warn("Could not save the nutrition form locally.");
+  }
+});
 </script>
-
-</body>
-</html>
